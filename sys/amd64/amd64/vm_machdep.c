@@ -160,7 +160,7 @@ cpu_fork(td1, p2, td2, flags)
 {
 
 	/////////////////
-    log(LOG_INFO, "\n\t\tVM_MACHDEP 1) ** cpu_fork() ** has been called\n");
+    //log(LOG_INFO, "\n\t\tVM_MACHDEP 1) ** cpu_fork() ** has been called\n");
     /////////////////
 
 	register struct proc *p1;
@@ -182,7 +182,7 @@ cpu_fork(td1, p2, td2, flags)
 		}
 
 		/////////////////
-		log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT with RFPROC = 0 \n");
+		//log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT with RFPROC = 0 \n");
 		/////////////////
 
 		return;
@@ -293,7 +293,7 @@ cpu_fork(td1, p2, td2, flags)
 
 
 		/////////////////
-		log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT \n");
+		//log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT \n");
 		/////////////////
 
 }

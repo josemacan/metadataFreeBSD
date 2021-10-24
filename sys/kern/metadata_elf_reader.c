@@ -80,9 +80,9 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 	
 
     /////////////////
-    log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- size of section header table entry: %u\n", hdr->e_shentsize);
-    log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- count of section header table entries: %u\n", hdr->e_shnum);
-	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- size of whole section header table: %u\n", (hdr->e_shentsize)*(hdr->e_shnum));
+    //log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- size of section header table entry: %u\n", hdr->e_shentsize);
+    //log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- count of section header table entries: %u\n", hdr->e_shnum);
+	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- size of whole section header table: %u\n", (hdr->e_shentsize)*(hdr->e_shnum));
     /////////////////
 
     /////////////////////////////////////////////////////////////////////
@@ -114,8 +114,8 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
     }
 
 
-	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Index of string section header in table %hu -- hex: 0x%x\n", hdr->e_shstrndx, hdr->e_shstrndx);   
-	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- size of strndx section in bytes: %zu\n", (size_t) sectionheader_table[hdr->e_shstrndx].sh_size); 
+	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Index of string section header in table %hu -- hex: 0x%x\n", hdr->e_shstrndx, hdr->e_shstrndx);   
+	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- size of strndx section in bytes: %zu\n", (size_t) sectionheader_table[hdr->e_shstrndx].sh_size); 
 
 	// 3) Elements needed to iterate over each section of the ELF file.
 
@@ -141,7 +141,7 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
 	sh_str = buff;
 
-	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- sh_str = buff \n");
+	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- sh_str = buff \n");
 
 	// 6) Iterate over each section of the section header table
 

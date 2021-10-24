@@ -2194,7 +2194,7 @@ sched_fork(struct thread *td, struct thread *child)
 {
 
 	/////////////////
-    log(LOG_INFO, "\n\tSCHED_ULE 1) ** sched_fork() ** has been called\n");
+    //log(LOG_INFO, "\n\tSCHED_ULE 1) ** sched_fork() ** has been called\n");
     /////////////////
 
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
@@ -2210,7 +2210,7 @@ sched_fork(struct thread *td, struct thread *child)
 	sched_priority(td);
 
 	/////////////////
-    log(LOG_INFO, "\tSCHED_ULE 1) ** sched_fork() ** EXIT\n");
+    //log(LOG_INFO, "\tSCHED_ULE 1) ** sched_fork() ** EXIT\n");
     /////////////////
 
 }
@@ -2223,7 +2223,7 @@ sched_fork_thread(struct thread *td, struct thread *child)
 {
 
 	/////////////////
-    log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** has been called\n");
+    //log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** has been called\n");
     /////////////////
 
 	struct td_sched *ts;
@@ -2234,7 +2234,7 @@ sched_fork_thread(struct thread *td, struct thread *child)
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 
 	/////////////////
-    log(LOG_INFO, "\tSCHED_ULE 2) // sched_fork_thread() // Initialize child\n");
+    //log(LOG_INFO, "\tSCHED_ULE 2) // sched_fork_thread() // Initialize child\n");
     /////////////////
 
 	/*
@@ -2270,7 +2270,7 @@ sched_fork_thread(struct thread *td, struct thread *child)
 #endif
 
 	/////////////////
-    log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** EXIT\n");
+    //log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** EXIT\n");
     /////////////////
 
 }

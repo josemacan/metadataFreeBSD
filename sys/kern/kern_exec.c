@@ -324,7 +324,7 @@ pre_execve(struct thread *td, struct vmspace **oldvmspace)
 	int error;
 
     /////////////////
-    log(LOG_INFO, "\n2) ** pre_execve() ** has been called\n");
+    //log(LOG_INFO, "\n2) ** pre_execve() ** has been called\n");
     /////////////////
 
 
@@ -342,7 +342,7 @@ pre_execve(struct thread *td, struct vmspace **oldvmspace)
 	*oldvmspace = p->p_vmspace;
 
 	/////////////////
-    log(LOG_INFO, "\n2) ** pre_execve() ** EXIT\n");
+    //log(LOG_INFO, "\n2) ** pre_execve() ** EXIT\n");
     /////////////////
 
 	return (error);
@@ -354,7 +354,7 @@ post_execve(struct thread *td, int error, struct vmspace *oldvmspace)
 	struct proc *p;
 
 	/////////////////
-    log(LOG_INFO, "\n7) ** post_execve() ** has been called\n");
+    //log(LOG_INFO, "\n7) ** post_execve() ** has been called\n");
     /////////////////
 
 	KASSERT(td == curthread, ("non-current thread %p", td));
@@ -379,7 +379,7 @@ post_execve(struct thread *td, int error, struct vmspace *oldvmspace)
 	}
 
 	/////////////////
-	    log(LOG_INFO, "\n7) ** post_execve() ** EXIT\n");
+	//    log(LOG_INFO, "\n7) ** post_execve() ** EXIT\n");
 	/////////////////
 }
 
@@ -395,9 +395,9 @@ kern_execve(struct thread *td, struct image_args *args, struct mac *mac_p)
 {
 
 	/////////////
-		log(LOG_INFO, "\n4) ** kern_execve() ** has been called\n");
+	//	log(LOG_INFO, "\n4) ** kern_execve() ** has been called\n");
 
-		log(LOG_INFO, "4) // kern_execve() // - begin_argv: %s - # argc: %d - # len: %d \n", 
+	/*	log(LOG_INFO, "4) // kern_execve() // - begin_argv: %s - # argc: %d - # len: %d \n", 
 				args->begin_argv, args->argc, (int) (args->begin_envv - args->begin_argv) );
 
 		//void *pointer;
@@ -414,7 +414,7 @@ kern_execve(struct thread *td, struct image_args *args, struct mac *mac_p)
 			log(LOG_INFO, "%c", pointer[ii]);
 		}
 		log(LOG_INFO, "\n");
-
+	*/
 	//////////////
 
 
@@ -692,13 +692,13 @@ interpret:
 	error = -1;
 	if ((img_first = imgp->proc->p_sysent->sv_imgact_try) != NULL){
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - process contains a special image activator\n");
+		//log(LOG_INFO, "5) // do_execve() // - process contains a special image activator\n");
 		////////////////
 		error = img_first(imgp);
 	}
 	////////////////
 	else{
-		log(LOG_INFO, "5) // do_execve() // - process DOESNT contain a special image activator\n");
+		//log(LOG_INFO, "5) // do_execve() // - process DOESNT contain a special image activator\n");
 	}
 	////////////////	
 
@@ -709,12 +709,12 @@ interpret:
 	 */
 
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - iterate through list of image activators and call each one.\n");	
+		//log(LOG_INFO, "5) // do_execve() // - iterate through list of image activators and call each one.\n");	
 		////////////////
 
 	for (i = 0; error == -1 && execsw[i]; ++i) {		// execsw = estructura que contiene cada activador de imagen.
 		////////////
-		log(LOG_INFO, "5) // do_execve() // - image activator name (ex_ecsw name): %s\n", execsw[i]->ex_name);
+		//log(LOG_INFO, "5) // do_execve() // - image activator name (ex_ecsw name): %s\n", execsw[i]->ex_name);
 		////////////
 
 		if (execsw[i]->ex_imgact == NULL ||
@@ -725,14 +725,14 @@ interpret:
 	}
 
 	////////////////
-	log(LOG_INFO, "5) // do_execve() // - error value after image activator loop: %d\n", error);
+	//log(LOG_INFO, "5) // do_execve() // - error value after image activator loop: %d\n", error);
 	////////////////
 
 	if (error) {
 		if (error == -1) {
 
 			////////////
-			log(LOG_INFO, "5) // do_execve() - no match with image activators\n");
+			//log(LOG_INFO, "5) // do_execve() - no match with image activators\n");
 			////////////
 
 			if (textset == 0)
@@ -748,13 +748,13 @@ interpret:
 	 */
 
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - Interpreted? value = %u\n", imgp->interpreted);
+		//log(LOG_INFO, "5) // do_execve() // - Interpreted? value = %u\n", imgp->interpreted);
 		////////////////
 
 	if (imgp->interpreted) {
 
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - process is interpreted\n");
+		//log(LOG_INFO, "5) // do_execve() // - process is interpreted\n");
 		////////////////
 
 		exec_unmap_first_page(imgp);		// libero buffers
@@ -792,7 +792,7 @@ interpret:
 		args->fname = imgp->interpreter_name;
 
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - jump to interpret label - interpreter name: %s\n", imgp->interpreter_name);
+		//log(LOG_INFO, "5) // do_execve() // - jump to interpret label - interpreter name: %s\n", imgp->interpreter_name);
 		////////////////
 
 		goto interpret;			// Salto a rutina de interprete
@@ -826,7 +826,7 @@ interpret:
 		stack_base = exec_copyout_strings(imgp);						// Copio los strings al espacio de direcciones del nuevo proceso. Retorno puntero a usar como base del stack pointer
 
 		////////////////
-		log(LOG_INFO, "5) // do_execve() // - stack_base: %p\n", stack_base);
+		//log(LOG_INFO, "5) // do_execve() // - stack_base: %p\n", stack_base);
 		////////////////
 
 
@@ -1045,7 +1045,7 @@ log(LOG_INFO, "\n");
 	SDT_PROBE1(proc, , , exec__success, args->fname);		// ******* FIN DE FUNCION - SUCCESS *******
 
 	/////////////////////////////
-	log(LOG_INFO, "5) ** do_execve() ** EXIT on success\n");
+	//log(LOG_INFO, "5) ** do_execve() ** EXIT on success\n");
 	/////////////////////////////
 
 exec_fail_dealloc:													// Rutina a ejecutar al provocarse error para deallocar memoria solicitada
@@ -1135,7 +1135,7 @@ exec_map_first_page(imgp)
 {
 
 	/////////////////
-    log(LOG_INFO, "\n6) ** exec_map_first_page() ** has been called\n");
+    //log(LOG_INFO, "\n6) ** exec_map_first_page() ** has been called\n");
 	/////////////////
 
 	int rv, i, after, initial_pagein;
@@ -1205,7 +1205,7 @@ exec_map_first_page(imgp)
 	imgp->image_header = (char *)sf_buf_kva(imgp->firstpage);
 
 	/////////////////
-    log(LOG_INFO, "6) ** exec_map_first_page() ** EXIT\n");
+    //log(LOG_INFO, "6) ** exec_map_first_page() ** EXIT\n");
 	/////////////////
 
 	return (0);
@@ -1239,8 +1239,8 @@ exec_new_vmspace(imgp, sv)
 {
 
 		/////////////////
-		log(LOG_INFO, "\n\t 4) ** exec_new_vmspace() ** has been called\n");
-		log(LOG_INFO, "\t 4) // exec_new_vmspace() // - interpreter name: %s\n", imgp->interpreter_name);
+		//log(LOG_INFO, "\n\t 4) ** exec_new_vmspace() ** has been called\n");
+		//log(LOG_INFO, "\t 4) // exec_new_vmspace() // - interpreter name: %s\n", imgp->interpreter_name);
 		/////////////////
 	
 	int error;
@@ -1329,7 +1329,7 @@ exec_new_vmspace(imgp, sv)
 	vmspace->vm_maxsaddr = (char *)stack_addr;
 
 	/////////////////
-		log(LOG_INFO, "\t 4) ** exec_new_vmspace() ** EXIT \n");
+	//	log(LOG_INFO, "\t 4) ** exec_new_vmspace() ** EXIT \n");
 	/////////////////
 
 	return (0);
@@ -1348,7 +1348,7 @@ exec_copyin_args(struct image_args *args, char *fname,
 	size_t length;
 
 	/////////////////
-    log(LOG_INFO, "\n3) ** exec_copyin_args() ** has been called for: %s\n", fname);
+    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** has been called for: %s\n", fname);
     /////////////////
 
 	bzero(args, sizeof(*args));
@@ -1431,7 +1431,7 @@ exec_copyin_args(struct image_args *args, char *fname,
 	}
 
 	/////////////////
-    log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT sucess\n");
+    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT sucess\n");
     /////////////////
 
 	return (0);
@@ -1440,7 +1440,7 @@ err_exit:
 	exec_free_args(args);
 
 	/////////////////
-    log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT with error\n");
+    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT with error\n");
     /////////////////
 
 	return (error);
@@ -1562,7 +1562,7 @@ exec_copyout_strings(imgp)
 	char canary[sizeof(long) * 8];
 
 	////////////
-	log(LOG_INFO, "\n6) ** exec_copyout_strings() ** has been called\n");
+	//log(LOG_INFO, "\n6) ** exec_copyout_strings() ** has been called\n");
 	////////////
 
 	szps = sizeof(pagesizes[0]) * MAXPAGESIZES;
@@ -1700,11 +1700,11 @@ exec_copyout_strings(imgp)
 	suword(vectp, 0);
 
 	////////////
-	log(LOG_INFO, "6) // exec_copyout_strings // - return stack base: value pointed: %ld - address pointed: %p\n", *stack_base, stack_base);
+	//log(LOG_INFO, "6) // exec_copyout_strings // - return stack base: value pointed: %ld - address pointed: %p\n", *stack_base, stack_base);
 	////////////
 
 	////////////
-	log(LOG_INFO, "6) ** exec_copyout_strings ** EXIT\n");
+	//log(LOG_INFO, "6) ** exec_copyout_strings ** EXIT\n");
 	////////////
 
 	return (stack_base);

@@ -166,7 +166,7 @@ __elfN(freebsd_trans_osrel)(const Elf_Note *note, int32_t *osrel)
 	uintptr_t p;
 
     /////////////////
-    log(LOG_INFO, "\n\t 3) ** __elfN(freebsd_trans_osrel) ** has been called\n");
+    //log(LOG_INFO, "\n\t 3) ** __elfN(freebsd_trans_osrel) ** has been called\n");
     /////////////////
 
 	p = (uintptr_t)(note + 1);
@@ -174,7 +174,7 @@ __elfN(freebsd_trans_osrel)(const Elf_Note *note, int32_t *osrel)
 	*osrel = *(const int32_t *)(p);
 
     /////////////////
-    log(LOG_INFO, "\t 3) ** __elfN(freebsd_trans_osrel) ** EXIT\n");
+    //log(LOG_INFO, "\t 3) ** __elfN(freebsd_trans_osrel) ** EXIT\n");
     /////////////////
 
 	return (TRUE);
@@ -273,7 +273,7 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 {
 
 	/////////////////
-	log(LOG_INFO, "\n\t 2) ** __elfN(get_brandinfo) ** -- has been called --- Several ways of exit\n");
+	//log(LOG_INFO, "\n\t 2) ** __elfN(get_brandinfo) ** -- has been called --- Several ways of exit\n");
 	/////////////////
 
 	const Elf_Ehdr *hdr = (const Elf_Ehdr *)imgp->image_header;
@@ -298,7 +298,7 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 		    (BI_BRAND_NOTE|BI_BRAND_NOTE_MANDATORY)) != 0) {
 
 				/////////////////
-				log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(check_note) **\n");
+				//log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(check_note) **\n");
 				/////////////////
 
 			ret = __elfN(check_note)(imgp, bi->brand_note, osrel);
@@ -379,7 +379,7 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 		if (hdr->e_machine == bi->machine && __elfN(fallback_brand) == bi->brand){
 
 				/////////////////
-				log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(fallback_brand) **\n");
+				//log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(fallback_brand) **\n");
 				/////////////////
 
 			return (bi);
@@ -458,7 +458,7 @@ __elfN(map_insert)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
 {
 
     /////////////////
-    log(LOG_INFO, "\n\t\t 6) ** __elfN(map_insert) ** has been called -- Several ways of exit\n");
+    //log(LOG_INFO, "\n\t\t 6) ** __elfN(map_insert) ** has been called -- Several ways of exit\n");
     /////////////////
 
 	struct sf_buf *sf;
@@ -533,9 +533,9 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 {
 
     /////////////////
-    log(LOG_INFO, "\n\t\t 5) ** __elfN(load_section) ** has been called\n");
-	log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- this section has = size in memory: %ld - size in file: %ld - virtual address in memory: %p\n",
-					 memsz, filsz, (void *) vmaddr);
+    //log(LOG_INFO, "\n\t\t 5) ** __elfN(load_section) ** has been called\n");
+	/*log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- this section has = size in memory: %ld - size in file: %ld - virtual address in memory: %p\n",
+					 memsz, filsz, (void *) vmaddr);*/
     /////////////////
 	
 	struct sf_buf *sf;
@@ -583,7 +583,7 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		    (prot & VM_PROT_WRITE ? 0 : MAP_DISABLE_COREDUMP);
 
 		//////////////////////
-			log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- calling ** __elfN(map_insert) **\n");
+		//	log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- calling ** __elfN(map_insert) **\n");
 		//////////////////////
 
 		rv = __elfN(map_insert)(map,
@@ -600,7 +600,7 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		if (memsz == filsz) {
 
 					/////////////////
-					log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT - with memsz = filsz at first\n");
+					//log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT - with memsz = filsz at first\n");
 					/////////////////
 
 			return (0);
@@ -640,7 +640,7 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		    trunc_page(offset + filsz);
 
 			/////////////////
-			log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- send page fragment from kernel space to user space using copyout() function\n");
+			//log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- send page fragment from kernel space to user space using copyout() function\n");
 			/////////////////
 
 		error = copyout((caddr_t)sf_buf_kva(sf) + off,
@@ -661,7 +661,7 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 
 		
 	/////////////////
-	log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT\n");
+	//log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT\n");
 	/////////////////
 
 	return (0);
@@ -685,8 +685,8 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 {
 
     /////////////////
-    log(LOG_INFO, "\n\t\t 7) ** __elfN(load_file)** has been called\n");
-	log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- Load the shared object or the executable in memory\n");
+    //log(LOG_INFO, "\n\t\t 7) ** __elfN(load_file)** has been called\n");
+	//log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- Load the shared object or the executable in memory\n");
     /////////////////
 
 	struct {
@@ -768,9 +768,9 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 	}
 
 	//////////////
-	log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- elf_header hdr = size each entry: %u -- num entries: %u -- size total table: %u\n",
+	/*log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- elf_header hdr = size each entry: %u -- num entries: %u -- size total table: %u\n",
 			hdr->e_shentsize, hdr->e_shnum, ((hdr->e_shentsize)*(hdr->e_shnum)) );
-
+	*/
 	/////////////
 
 	/* Only support headers that fit within first page for now      */
@@ -791,8 +791,8 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 			/* Loadable segment */
 
 				//////////////
-				log(LOG_INFO, "\t\t 7) // __elfN(load_file) // ---- Loading a loadable segment -- segment number: %d -- type: %d\n",
-						i, phdr[i].p_type );
+				/*log(LOG_INFO, "\t\t 7) // __elfN(load_file) // ---- Loading a loadable segment -- segment number: %d -- type: %d\n",
+						i, phdr[i].p_type );*/
 				/////////////
 
 			prot = __elfN(trans_prot)(phdr[i].p_flags);
@@ -815,7 +815,7 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 	*entry = (unsigned long)hdr->e_entry + rbase;
 
 	//////////////
-	log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- addr where file is loaded : %p -- entry point for loaded file: %p\n", (void *) addr, (void *) entry );
+	//log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- addr where file is loaded : %p -- entry point for loaded file: %p\n", (void *) addr, (void *) entry );
 	/////////////
 
 fail:
@@ -828,7 +828,7 @@ fail:
 	free(tempdata, M_TEMP);
 
 	//////////////
-	log(LOG_INFO, "\t\t 7) ** __elfN(load_file) ** -- EXIT function\n");
+	//log(LOG_INFO, "\t\t 7) ** __elfN(load_file) ** -- EXIT function\n");
 	/////////////
 
 
@@ -841,8 +841,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
     /////////////////
     log(LOG_INFO, "\n\t 1) ** __CONCAT(exec_, __elfN(imgact)) ** has been called\n");
-	log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // thread struct size: %lu - proc struct size: %lu\n", sizeof(struct thread), sizeof(struct proc));
-	log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // PRE p_metadata_section_flag: %d\n", curthread->td_proc->p_metadata_section_flag);
+	//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // thread struct size: %lu - proc struct size: %lu\n", sizeof(struct thread), sizeof(struct proc));
+	//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // PRE p_metadata_section_flag: %d\n", curthread->td_proc->p_metadata_section_flag);
 	////////////////
 
 	struct thread *td;
@@ -959,13 +959,13 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
     /////////////////
 	log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // POST p_metadata_section_flag: %d\n", td->td_proc->p_metadata_section_flag);
-    log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
+    //log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
     /////////////////
 
 	for (i = 0; i < hdr->e_phnum; i++) {
 
 		/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
+		//log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
 		/////////////////
 
 		switch (phdr[i].p_type) {
@@ -1008,7 +1008,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 				    phdr[i].p_offset;
 			}
 					/////////////////
-					log(LOG_INFO, "\t 1) // __CONCAT() // -------- interp name: %s\n",interp);
+					//log(LOG_INFO, "\t 1) // __CONCAT() // -------- interp name: %s\n",interp);
 					/////////////////
 			break;
 		case PT_GNU_STACK:
@@ -1022,7 +1022,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	/////// Detect ELF binary type
 
     /////////////////
-    log(LOG_INFO, "\t 1) // __CONCAT() // -- detect ELF binary type, calling ** __elfN(get_brandinfo) **\n");
+    //log(LOG_INFO, "\t 1) // __CONCAT() // -- detect ELF binary type, calling ** __elfN(get_brandinfo) **\n");
     /////////////////
 
 	brand_info = __elfN(get_brandinfo)(imgp, interp, interp_name_len,		
@@ -1074,19 +1074,19 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		goto ret;
 
 	/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // -- Again, iterate over program headers\n");
+	//	log(LOG_INFO, "\t 1) // __CONCAT() // -- Again, iterate over program headers\n");
 	/////////////////			
 
 	for (i = 0; i < hdr->e_phnum; i++) {
 			/////////////////
-			log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
+			//log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
 			/////////////////
 
 		switch (phdr[i].p_type) {
 		case PT_LOAD:	/* Loadable segment */
 
 			/////////////////
-			log(LOG_INFO, "\t 1) // __CONCAT() // ---- operations over PT LOAD segment - num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
+			//log(LOG_INFO, "\t 1) // __CONCAT() // ---- operations over PT LOAD segment - num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
 			/////////////////
 
 			if (phdr[i].p_memsz == 0)
@@ -1094,14 +1094,14 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 			
 			/////////////////
-			log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(trans_prot) ** \n");
+			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(trans_prot) ** \n");
 			/////////////////
 
 			prot = __elfN(trans_prot)(phdr[i].p_flags);
 
 			/////////////////
-			log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(load_section)\n");
-			log(LOG_INFO, "\t 1) // __CONCAT() // -------- Loading phdr segment num: %d -- type (p_type): %u\n", i, phdr[i].p_type);		
+			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(load_section)\n");
+			//log(LOG_INFO, "\t 1) // __CONCAT() // -------- Loading phdr segment num: %d -- type (p_type): %u\n", i, phdr[i].p_type);		
 			/////////////////
 
 			error = __elfN(load_section)(imgp, phdr[i].p_offset,
@@ -1124,7 +1124,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 					proghdr = phdr[i].p_vaddr + hdr->e_phoff +
 						et_dyn_addr;
 					/////////////////
-					log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d segment contains the program headers\n", i);
+					//log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d segment contains the program headers\n", i);
 					/////////////////
 					
 				}
@@ -1134,7 +1134,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			    phdr[i].p_vaddr + et_dyn_addr - seg_addr);
 
 					/////////////////
-					log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d = seg_addr: 0x%lx -- seg_size: %lu \n", i, seg_addr, seg_size);
+					//log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d = seg_addr: 0x%lx -- seg_size: %lu \n", i, seg_addr, seg_size);
 					/////////////////
 
 			/*
@@ -1158,8 +1158,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			total_size += seg_size;
 
 					/////////////////
-					log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr[%d] = text_size: %lu -- text_addr: 0x%lx -- data_size: %lu -- data_addr: 0x%lx -- total_size: %lu \n", 
-									i, text_size, text_addr, data_size, data_addr, total_size);
+					/*log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr[%d] = text_size: %lu -- text_addr: 0x%lx -- data_size: %lu -- data_addr: 0x%lx -- total_size: %lu \n", 
+									i, text_size, text_addr, data_size, data_addr, total_size); */
 					/////////////////
 			
 			break;
@@ -1178,7 +1178,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	entry = (u_long)hdr->e_entry + et_dyn_addr;
 		/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // --- entry point: 0x%lx \n", entry);
+		//log(LOG_INFO, "\t 1) // __CONCAT() // --- entry point: 0x%lx \n", entry);
 		/////////////////
 
 	/*
@@ -1211,8 +1211,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	vmspace->vm_daddr = (caddr_t)(uintptr_t)data_addr;		///// user virtual address of data
 
 		/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // --- vmspace: text size (vm_tsize): %ld - user virtual address of text (vm_taddr): %p - \n data size (vm_dsize): %ld - user virtual address of data (vm_daddr): %p\n", 
-				vmspace->vm_tsize, (void*) vmspace->vm_taddr, vmspace->vm_dsize, (void*) vmspace->vm_daddr);
+		/*log(LOG_INFO, "\t 1) // __CONCAT() // --- vmspace: text size (vm_tsize): %ld - user virtual address of text (vm_taddr): %p - \n data size (vm_dsize): %ld - user virtual address of data (vm_daddr): %p\n", 
+				vmspace->vm_tsize, (void*) vmspace->vm_taddr, vmspace->vm_dsize, (void*) vmspace->vm_daddr); */
 		/////////////////
 	
 
@@ -1231,7 +1231,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	if (interp != NULL) {
 
 		/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // ------ interp NOT null \n");
+		//log(LOG_INFO, "\t 1) // __CONCAT() // ------ interp NOT null \n");
 		/////////////////
 
 		have_interp = FALSE;
@@ -1243,8 +1243,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			    brand_info->emul_path, interp);
 
 						/////////////////
-						log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->emul_path - path: %s \n", path);
-						log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
+						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->emul_path - path: %s \n", path);
+						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
 						/////////////////
 
 			error = __elfN(load_file)(imgp->proc, path, &addr,
@@ -1259,8 +1259,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 
 						/////////////////
-						log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->interp_path - new interp: %s \n", newinterp);
-						log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
+						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->interp_path - new interp: %s \n", newinterp);
+						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
 						/////////////////
 
 			error = __elfN(load_file)(imgp->proc, newinterp, &addr,
@@ -1270,7 +1270,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		}
 		if (!have_interp) {
 						/////////////////
-						log(LOG_INFO, "\t 1) // __CONCAT() // --------- have interp - interp: %s \n", interp);
+						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- have interp - interp: %s \n", interp);
 						/////////////////
 			error = __elfN(load_file)(imgp->proc, interp, &addr,
 			    &imgp->entry_addr, sv->sv_pagesize);
@@ -1285,13 +1285,13 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		addr = et_dyn_addr;
 
 			/////////////////
-			log(LOG_INFO, "\t 1) // __CONCAT() // ------ NO interp \n");
+			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ NO interp \n");
 			/////////////////
 
 	}
 
 		/////////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // -- addr: 0x%lx  - imgp->entry_addr: 0x%lx\n", addr, imgp->entry_addr);
+		//log(LOG_INFO, "\t 1) // __CONCAT() // -- addr: 0x%lx  - imgp->entry_addr: 0x%lx\n", addr, imgp->entry_addr);
 		/////////////////
 		
 

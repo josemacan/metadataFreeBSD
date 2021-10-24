@@ -400,7 +400,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 {
 
     /////////////////
-    log(LOG_INFO, "\nFORK 3) ** do_fork() ** has been called\n");
+    //log(LOG_INFO, "\nFORK 3) ** do_fork() ** has been called\n");
     /////////////////
 
 	struct proc *p1, *pptr;
@@ -415,7 +415,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	p1 = td->td_proc;				// process associated to the parent process
 
 	/////////////////
-    log(LOG_INFO, "FORK 3) // do_fork() // -- find an unused PID number for the new process\n");
+    //log(LOG_INFO, "FORK 3) // do_fork() // -- find an unused PID number for the new process\n");
     /////////////////
 
 	trypid = fork_findpid(fr->fr_flags);	
@@ -435,7 +435,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	PROC_LOCK(p1);
 
 	/////////////////
-    log(LOG_INFO, "FORK 3) // do_fork() // -- new process PID: %d and process state is: %d\n", p2->p_pid, p2->p_state);
+    //log(LOG_INFO, "FORK 3) // do_fork() // -- new process PID: %d and process state is: %d\n", p2->p_pid, p2->p_state);
     /////////////////
 
 	sx_xunlock(&allproc_lock);
@@ -465,7 +465,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 		newsigacts = sigacts_alloc();
 
 	/////////////////
-    log(LOG_INFO, "FORK 3) // do_fork() // -- copy file descriptors and/or shared process leaders\n");
+    //log(LOG_INFO, "FORK 3) // do_fork() // -- copy file descriptors and/or shared process leaders\n");
     /////////////////
 
 	/*
@@ -502,7 +502,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	}
 
 	/////////////////
-    log(LOG_INFO, "FORK 3) // do_fork() // -- create an entry for the new process in the process table\n");
+    //log(LOG_INFO, "FORK 3) // do_fork() // -- create an entry for the new process in the process table\n");
     /////////////////
 
 
@@ -532,8 +532,8 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 #endif
 
 	/////////////////
-    log(LOG_INFO, "FORK 3) // do_fork() // -- sched -- initialize the child process\n");
-	log(LOG_INFO, "FORK 3) // do_fork() // -- sched -- call ** sched_fork() **\n");
+    //log(LOG_INFO, "FORK 3) // do_fork() // -- sched -- initialize the child process\n");
+	//log(LOG_INFO, "FORK 3) // do_fork() // -- sched -- call ** sched_fork() **\n");
     /////////////////
 
 	/*
@@ -576,7 +576,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	        p2->p_sigparent = SIGCHLD;
 
 	///////////
-	log(LOG_INFO, "FORK 3) // do_fork() // -- copy vnode of executable ( p->p_textvp )\n");
+	//log(LOG_INFO, "FORK 3) // do_fork() // -- copy vnode of executable ( p->p_textvp )\n");
 	///////////
 
 	p2->p_textvp = p1->p_textvp;
@@ -632,8 +632,8 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 			PROC_LOCK(p2);
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- task leader (p1) is exiting\n");
-				log(LOG_INFO, "FORK 3) // do_fork() // -- Send SIGKILL signal to the new process p2\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- task leader (p1) is exiting\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- Send SIGKILL signal to the new process p2\n");
 				///////////
 
 			kern_psignal(p2, SIGKILL);
@@ -677,7 +677,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	 */
 	if (p1->p_pfsflags & PF_FORK) {
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- child (p2) inherits the procfs ioctl flags from its parent \n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- child (p2) inherits the procfs ioctl flags from its parent \n");
 				///////////
 
 		p2->p_stops = p1->p_stops;
@@ -703,7 +703,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 		p2->p_reaper = pptr;
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- RFNOWAIT is set, then child is now disassociated from parent \n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- RFNOWAIT is set, then child is now disassociated from parent \n");
 				///////////
 
 	} else {
@@ -728,7 +728,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 #endif
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- call function ** vm_forkproc() ** \n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- call function ** vm_forkproc() ** \n");
 				///////////
 
 	/*
@@ -762,7 +762,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	 */
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- associate the created process descriptor with the child process \n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- associate the created process descriptor with the child process \n");
 				///////////
 
 	if (fr->fr_flags & RFPROCDESC)
@@ -779,7 +779,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	 */
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- set the start time of the child process \n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- set the start time of the child process \n");
 				///////////
 
 	
@@ -789,7 +789,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- set child process to state: PRS_NORMAL (RUNNABLE) - threads ready to run\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- set child process to state: PRS_NORMAL (RUNNABLE) - threads ready to run\n");
 				///////////
 
 	PROC_SLOCK(p2);
@@ -835,7 +835,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	 */
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- new process can be swapped - _PRELE(p1): decrements the hold count of proc p1\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- new process can be swapped - _PRELE(p1): decrements the hold count of proc p1\n");
 				///////////
 
 	_PRELE(p1);
@@ -846,7 +846,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	 */
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- Tell to all knodes attached to the parent if they want to track the new process p2\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- Tell to all knodes attached to the parent if they want to track the new process p2\n");
 				///////////
 
 	knote_fork(p1->p_klist, p2->p_pid);
@@ -855,7 +855,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	if (fr->fr_flags & RFPROCDESC) {
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- RFPROCDESC is requested, then, init file of process 2.\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- RFPROCDESC is requested, then, init file of process 2.\n");
 				///////////
 
 		procdesc_finit(p2->p_procdesc, fp_procdesc);
@@ -872,16 +872,16 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 		thread_lock(td2);
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- RFSTOPPED NOT requested\n");
-				log(LOG_INFO, "FORK 3) // do_fork() // -- thread of new process (td2) is set to state TDS_CAN_RUN\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- RFSTOPPED NOT requested\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- thread of new process (td2) is set to state TDS_CAN_RUN\n");
 
 				///////////
 
 		TD_SET_CAN_RUN(td2);
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- ****** calls sched_add() ****** with args SRQ_BORING\n");
-				log(LOG_INFO, "FORK 3) // do_fork() // -- ****** sched_add() == thread of new process (td2) is ADDED TO SCHEDULER ****** with args SRQ_BORING\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- ****** calls sched_add() ****** with args SRQ_BORING\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- ****** sched_add() == thread of new process (td2) is ADDED TO SCHEDULER ****** with args SRQ_BORING\n");
 
 
 		sched_add(td2, SRQ_BORING);
@@ -893,7 +893,7 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 	} else {
 
 				///////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- RFSTOPPED is requested\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- RFSTOPPED is requested\n");
 				///////////
 
 		*fr->fr_procp = p2;
@@ -911,14 +911,14 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 
 
     /////////////////
-				log(LOG_INFO, "FORK 3) // do_fork() // -- POST sched_add\n");
-				log(LOG_INFO, "FORK 3) // do_fork() // -- sched_tdname CURRENT THREAD (td) - thread name: %s\n", sched_tdname(td));
-				log(LOG_INFO, "FORK 3) // do_fork() // -- sched_tdname NEW THREAD (td2) - thread name: %s\n", sched_tdname(td2));
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- POST sched_add\n");
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- sched_tdname CURRENT THREAD (td) - thread name: %s\n", sched_tdname(td));
+				//log(LOG_INFO, "FORK 3) // do_fork() // -- sched_tdname NEW THREAD (td2) - thread name: %s\n", sched_tdname(td2));
 				//log(LOG_INFO, "FORK 3) // do_fork() // -- strncmp macrosCommentCLANG: %d\n", strncmp("macrosCommentCLANG", sched_tdname(td2),sizeof("macrosCommentCLANG")));
 
 
     /////////////////
-    log(LOG_INFO, "FORK 3) ** do_fork() ** EXIT\n");
+    //log(LOG_INFO, "FORK 3) ** do_fork() ** EXIT\n");
     /////////////////
 
 }
@@ -928,7 +928,7 @@ fork1(struct thread *td, struct fork_req *fr)
 {
 
     /////////////////
-    log(LOG_INFO, "\nFORK 2) ** fork1() ** has been called\n");
+    //log(LOG_INFO, "\nFORK 2) ** fork1() ** has been called\n");
     /////////////////
 
 	struct proc *p1, *newproc;
@@ -1048,7 +1048,7 @@ fork1(struct thread *td, struct fork_req *fr)
 	/* Allocate new proc. */
 
     /////////////////
-    log(LOG_INFO, "FORK 2) // fork1() // -- allocate new proc -- new thread td2\n");
+    //log(LOG_INFO, "FORK 2) // fork1() // -- allocate new proc -- new thread td2\n");
 	/////////////////
 
 	newproc = uma_zalloc(proc_zone, M_WAITOK);
@@ -1074,8 +1074,8 @@ fork1(struct thread *td, struct fork_req *fr)
 	if ((flags & RFMEM) == 0) {
 
 		/////////////////
-		log(LOG_INFO, "FORK 2) // fork1() // -- create new process vmspace struct and vm_map based on those of the existing process**\n");
-		log(LOG_INFO, "FORK 2) // fork1() // -- call ** vmspace_fork() **\n");
+		//log(LOG_INFO, "FORK 2) // fork1() // -- create new process vmspace struct and vm_map based on those of the existing process**\n");
+		//log(LOG_INFO, "FORK 2) // fork1() // -- call ** vmspace_fork() **\n");
 		/////////////////
 
 		vm2 = vmspace_fork(p1->p_vmspace, &mem_charged);
@@ -1097,7 +1097,7 @@ fork1(struct thread *td, struct fork_req *fr)
 	} else{
 
 		/////////////////
-		log(LOG_INFO, "FORK 2) // fork1() // -- vm2 = NULL\n");
+		//log(LOG_INFO, "FORK 2) // fork1() // -- vm2 = NULL\n");
 		/////////////////
 
 		vm2 = NULL;
@@ -1145,7 +1145,7 @@ fork1(struct thread *td, struct fork_req *fr)
 	if (ok) {
 
 				/////////////////
-				log(LOG_INFO, "FORK 2) // fork1() // -- call do_fork()\n");
+				//log(LOG_INFO, "FORK 2) // fork1() // -- call do_fork()\n");
 				/////////////////
 
 		do_fork(td, fr, newproc, td2, vm2, fp_procdesc);
@@ -1166,7 +1166,7 @@ fork1(struct thread *td, struct fork_req *fr)
 			/////////////////
 
 			/////////////////
-			log(LOG_INFO, "FORK 2) ** fork1() ** EXIT\n");
+			//log(LOG_INFO, "FORK 2) ** fork1() ** EXIT\n");
 			/////////////////
 
 		return (0);
