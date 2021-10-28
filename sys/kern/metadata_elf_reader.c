@@ -256,3 +256,32 @@ int copyMetadataToProc(char *metadata, struct thread *td){
 
 	return ret;
 }
+
+char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
+
+	if(num_function == UND){
+		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
+		goto fail;
+	}
+
+	const char metadataSectionData[MAXHOSTNAMELEN];
+	char returned_payloadstring[MAXHOSTNAMELEN];
+
+	memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
+
+	//////////////////
+		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
+		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
+	//////////////////
+
+	goto ret;
+
+fail:
+	*return_flag = -1;
+    return NULL;
+
+ret: 
+	*return_flag = 2;
+	return NULL;
+
+}

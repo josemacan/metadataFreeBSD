@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "complex": "c",
-        "valarray": "c"
+        "valarray": "c",
+        "param.h": "c"
     }
 }

@@ -892,9 +892,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		return (-1);
 	}
 
-	
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-	
 
 
 	/*
@@ -961,6 +960,26 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // POST p_metadata_section_flag: %d\n", td->td_proc->p_metadata_section_flag);
     //log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
     /////////////////
+
+	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+    int returned_flag_payload = 0;
+    int function_num_payload = 3;
+    char* retrieved_payload = getPayloadPerFunction(td, function_num_payload, &returned_flag_payload);
+		//////////////
+		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** PAYLOAD RETRIEVED: %s -- FUNCTION NUM PAYLOAD: %d -- RETURNED FLAG PAYLOAD: %d ***\n", retrieved_payload, function_num_payload, returned_flag_payload );
+		//////////////
+	if(retrieved_payload == NULL && returned_flag_payload == -1){
+		//////////////
+		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getPayloadPerFunction()\n");
+		//////////////
+		return (-1);
+	}
+
+	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
 
 	for (i = 0; i < hdr->e_phnum; i++) {
 
