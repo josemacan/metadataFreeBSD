@@ -281,7 +281,7 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	
 	////////////////
 	log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- func1: ");
-	for(int zz = 0; zz < len_func1; zz++){
+	for(int zz = 0; zz < sizeof(func1); zz++){
 		log(LOG_INFO, "%c", func1[zz]);
 		}
 	log(LOG_INFO, "\n");
