@@ -62,7 +62,7 @@ __FBSDID("$FreeBSD$");
 static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  // @1: type (must start with 'M_') @2: shortdesc @3: longdesc 
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
-
+//MALLOC_DEFINE(M_METASECTIONDATA, "metadata section data", "Memory for metadata section data" );              // " " of type M_METASECTIONDATA
 
 char* 
 getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag){
@@ -264,14 +264,14 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		goto fail;
 	}
 
-	char metadataSectionData[MAXHOSTNAMELEN];
+	//char metadataSectionData[MAXHOSTNAMELEN];
 	//char returned_payloadstring[MAXHOSTNAMELEN];
 
-	memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
+	//memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
 
 	//////////////////
-		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
-		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
+		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
+		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
 	goto ret;
