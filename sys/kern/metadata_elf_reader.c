@@ -264,14 +264,14 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		goto fail;
 	}
 
-	//char metadataSectionData[MAXHOSTNAMELEN];
+	char metadataSectionData[MAXHOSTNAMELEN];
 	//char returned_payloadstring[MAXHOSTNAMELEN];
 
-	//memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
+	memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
 
 	//////////////////
 		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
-		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
+		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
 	goto ret;
