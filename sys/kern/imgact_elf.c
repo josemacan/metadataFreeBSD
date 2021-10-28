@@ -963,7 +963,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
+	/*
     int returned_flag_payload = 0;
     int function_num_payload = 3;
     char* retrieved_payload = getPayloadPerFunction(td, function_num_payload, &returned_flag_payload);
@@ -976,6 +976,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		//////////////
 		return (-1);
 	}
+	*/
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
