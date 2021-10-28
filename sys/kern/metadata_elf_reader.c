@@ -264,8 +264,8 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		goto fail;
 	}
 
-	const char metadataSectionData[MAXHOSTNAMELEN];
-	char returned_payloadstring[MAXHOSTNAMELEN];
+	char metadataSectionData[MAXHOSTNAMELEN];
+	//char returned_payloadstring[MAXHOSTNAMELEN];
 
 	memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
 
