@@ -287,7 +287,7 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	}
 	func1charp[MAXBUFFER_PAYLOAD] = '\0';
 
-	//snprintf(&func1charp, "[%d:", num_function);
+	sprintf(func1charp, "[%d:", num_function);
 	
 
 	//char func1charp[FUNC1CHARP_LEN] = {0};
