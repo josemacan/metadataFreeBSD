@@ -274,11 +274,11 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
-	char func1[50];
+	char func1[50] = {0};
 	//char func1[FUNCTION_NDIGITS+1+1+1];
 	//snprintf(func1, FUNCTION_NDIGITS+1+1, "[%d:",num_function);
 	int lenspf = 0; 
-	lenspf = sprintf(func1, "[%d:",num_function);
+	lenspf = snprintf(func1, 49, "[%d:", num_function);
 
 	////////////////////////
 	log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- sprintf len: %d\n", lenspf);
