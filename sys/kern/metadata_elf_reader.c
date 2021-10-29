@@ -275,8 +275,8 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	//////////////////
 
 	char func1[FUNCTION_NDIGITS+1+1+1];
-	func1[FUNCTION_NDIGITS+1+1]='\0';
-	sprintf(func1, "[%d:",num_function);
+	//func1[FUNCTION_NDIGITS+1+1]='\0';
+	snprintf(func1, FUNCTION_NDIGITS+1+1+1, "[%d:",num_function);
 
 	
 	////////////////
