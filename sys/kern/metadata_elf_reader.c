@@ -260,7 +260,7 @@ int copyMetadataToProc(char *metadata, struct thread *td){
 char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
 
 	//int func1_len = FUNCTION_NDIGITS+1+1+1;
-	int func1_len = 50;
+	//int func1_len = 50;
 
 	if(num_function == UND){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
