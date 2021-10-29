@@ -259,8 +259,8 @@ int copyMetadataToProc(char *metadata, struct thread *td){
 
 char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
 
-	int func1_len = FUNCTION_NDIGITS+1+1+1;
-
+	//int func1_len = FUNCTION_NDIGITS+1+1+1;
+	int func1_len = 50;
 
 	if(num_function == UND){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
@@ -282,6 +282,8 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR IN MALLOC - func1\n");
     	goto fail;
 	}
+
+	sprintf(func1, "[%d:", num_function);
 
 
 	//char func1[50] = {0};
