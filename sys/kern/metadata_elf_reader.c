@@ -277,13 +277,14 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
-	char* func1 = malloc(func1_len, M_FUNC1, M_WAITOK | M_ZERO);
-	if(func1 == NULL){
+	char* func1charp = malloc(func1_len, M_FUNC1, M_WAITOK | M_ZERO);
+	if(func1charp == NULL){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR IN MALLOC - func1\n");
     	goto fail;
 	}
+	func1charp[func1_len] = '\0';
 
-	sprintf(func1, "[%d:", num_function);
+	//asprintf(&func1charp, "[%d:", num_function);
 
 
 	//char func1[50] = {0};
