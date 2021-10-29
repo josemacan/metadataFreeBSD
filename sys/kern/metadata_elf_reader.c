@@ -276,13 +276,16 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 
 	char func1[FUNCTION_NDIGITS+1+1+1];
 	sprintf(func1, "[%d:",num_function);
+	func1[FUNCTION_NDIGITS+1+1]='\0';
 	
 	////////////////
+	/*
 	log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- func1: ");
 	for(int zz = 0; zz < sizeof(func1); zz++){
 		log(LOG_INFO, "%c", func1[zz]);
 		}
 	log(LOG_INFO, "\n");
+	*/
 	////////////////
 
 		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- func1: %s\n", func1);
