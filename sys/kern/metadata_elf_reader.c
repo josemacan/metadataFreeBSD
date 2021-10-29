@@ -292,7 +292,7 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	*/
 
 	char func1charp[FUNC1CHARP_LEN] = {0};
-	sprintf(func1charp, "[%d:", 3);
+	sprintf(func1charp, "[%d:", num_function);
 
 	//char func1[50] = {0};
 	//char func1[FUNCTION_NDIGITS+1+1+1];
