@@ -64,6 +64,9 @@ static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
 MALLOC_DEFINE(M_FUNC1, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
 
+
+#define FUNC1CHARP_LEN 51
+
 char* 
 getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag){
 
@@ -260,7 +263,7 @@ int copyMetadataToProc(char *metadata, struct thread *td){
 char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
 
 	//int func1_len = FUNCTION_NDIGITS+1+1+1;
-	int func1_len = 50+1;
+	//int func1_len = 50+1;
 
 	if(num_function == UND){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
@@ -288,7 +291,7 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	snprintf(&func1charp, "[%d:", num_function);
 	*/
 
-	char func1charp[func1_len] = {0};
+	char func1charp[FUNC1CHARP_LEN] = {0};
 	sprintf(func1charp, "[%d:", 3);
 
 	//char func1[50] = {0};
