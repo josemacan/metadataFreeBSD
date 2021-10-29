@@ -274,9 +274,9 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
-	char func1[FUNCTION_NDIGITS+1+1+1];
-	func1[FUNCTION_NDIGITS+1+1] = '\0';
-	snprintf(func1, FUNCTION_NDIGITS+1+1, "[%d:",num_function);
+	//char func1[FUNCTION_NDIGITS+1+1+1];
+	//func1[FUNCTION_NDIGITS+1+1] = '\0';
+	//snprintf(func1, FUNCTION_NDIGITS+1+1, "[%d:",num_function);
 
 	
 	////////////////
