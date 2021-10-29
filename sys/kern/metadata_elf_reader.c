@@ -62,9 +62,9 @@ __FBSDID("$FreeBSD$");
 static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  // @1: type (must start with 'M_') @2: shortdesc @3: longdesc 
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
-MALLOC_DEFINE(M_FUNC1, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
+MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
 
-
+#define MAXBUFFER_PAYLOAD 1024
 #define FUNC1CHARP_LEN 51
 
 char* 
@@ -280,19 +280,18 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
 
-	/*
-	char* func1charp = (char *) malloc(func1_len, M_FUNC1, M_WAITOK | M_ZERO);
+	char* func1charp = (char *) malloc(MAXBUFFER_PAYLOAD, M_FUNC1_CHARP, M_WAITOK | M_ZERO);
 	if(func1charp == NULL){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR IN MALLOC - func1\n");
     	goto fail;
 	}
-	func1charp[func1_len] = '\0';
+	func1charp[MAXBUFFER_PAYLOAD] = '\0';
 
-	snprintf(&func1charp, "[%d:", num_function);
-	*/
+	//snprintf(&func1charp, "[%d:", num_function);
+	
 
-	char func1charp[FUNC1CHARP_LEN] = {0};
-	sprintf(func1charp, "[%d:", num_function);
+	//char func1charp[FUNC1CHARP_LEN] = {0};
+	//sprintf(func1charp, "[%d:", num_function);
 
 	//char func1[50] = {0};
 	//char func1[FUNCTION_NDIGITS+1+1+1];
@@ -322,6 +321,9 @@ fail:
     return NULL;
 
 ret: 
+
+	free(func1charp, M_FUNC1_CHARP);
+
 	*return_flag = 2;
 	return NULL;
 
