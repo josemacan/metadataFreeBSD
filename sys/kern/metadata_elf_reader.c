@@ -284,7 +284,7 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 	}
 	func1charp[func1_len] = '\0';
 
-	//asprintf(&func1charp, "[%d:", num_function);
+	asprintf(&func1charp, "[%d:", num_function);
 
 
 	//char func1[50] = {0};
