@@ -62,7 +62,7 @@ __FBSDID("$FreeBSD$");
 static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  // @1: type (must start with 'M_') @2: shortdesc @3: longdesc 
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
-//MALLOC_DEFINE(M_METASECTIONDATA, "metadata section data", "Memory for metadata section data" );              // " " of type M_METASECTIONDATA
+MALLOC_DEFINE(M_FUNC1, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
 
 char* 
 getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag){
@@ -259,6 +259,9 @@ int copyMetadataToProc(char *metadata, struct thread *td){
 
 char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
 
+	int func1_len = FUNCTION_NDIGITS+1+1+1;
+
+
 	if(num_function == UND){
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
 		goto fail;
@@ -273,6 +276,13 @@ char* getPayloadPerFunction(struct thread *td, int num_function, int* return_fla
 		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
 		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
 	//////////////////
+
+	char* func1 = malloc(func1_len, M_FUNC1, M_WAITOK | M_ZERO);
+	if(func1 == NULL){
+		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR IN MALLOC - func1\n");
+    	goto fail;
+	}
+
 
 	//char func1[50] = {0};
 	//char func1[FUNCTION_NDIGITS+1+1+1];
