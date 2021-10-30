@@ -618,7 +618,10 @@ struct proc {
 	///////////////////// METADATA //////////////////////////
 	//*****************************************************//
 	char p_metadata[MAXHOSTNAMELEN + 1];	/* Metadata inserted for payload retrieve */
+	void	*p_metadata_addr;			/* Address of the allocated data from metadata section */
+	u_long p_metadata_size;				/* Size of the whole metadata section */
 	int p_metadata_section_flag;		/* Flag of metadata section presence in executable */
+	
 	//*****************************************************//
 /* End area that is zeroed on creation. */
 #define	p_endzero	p_magic
