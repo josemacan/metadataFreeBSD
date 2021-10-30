@@ -446,7 +446,8 @@ int copyMetadataToProc(void *metadata_addr, struct thread *td){
 	// ret -1 if error; else, num chars that would have been printed if the size were unlimited (not including final \0)
 	//ret = snprintf(td->td_proc->p_metadata, MAXHOSTNAMELEN, "%s", metadata_addr);
 
-	*td->td_proc->p_metadata_addr = *metadata_addr;
+	//*td->td_proc->p_metadata_addr = *metadata_addr;
+	td->td_proc->p_metadata_addr = metadata_addr;
 
 	return ret;
 }

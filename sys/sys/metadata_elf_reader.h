@@ -23,6 +23,7 @@ enum metadata_function_num {
 // Functions
 void* getMetadataSectionPayload(const Elf_Ehdr *, struct image_params *, int *, size_t *);
 //char* getMetadataSectionPayload(const Elf_Ehdr *, struct image_params *, int *);
-int copyMetadataToProc(char *, struct thread *);
+int copyMetadataToProc(void *, struct thread *);
+//int copyMetadataToProc(char *, struct thread *);
 char* getPayloadPerFunction(struct thread *, int , int *);
 #endif
