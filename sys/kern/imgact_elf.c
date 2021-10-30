@@ -951,7 +951,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		//pChar = (char*) ELFmetadata;
 
 			//////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
+			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 			//////////////
 
 		// Guardar en struct proc, guardar direcciom del puntero, tamanio del payload y el flag de metadata existente
