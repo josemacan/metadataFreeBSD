@@ -947,6 +947,16 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	
 	if(returned_flag == 1){
+
+		copyMetadataToProc(ELFmetadata, returned_flag, payload_size, td);
+
+			//////////////
+			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
+			//////////////
+	
+	}
+
+
 		//char* pChar;
 		//pChar = (char*) ELFmetadata;
 
@@ -969,16 +979,12 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		}
 		*/
 
-		td->td_proc->p_metadata_addr = ELFmetadata;			// p_metadata_addr points to the same address as metadata_addr
+		//////td->td_proc->p_metadata_addr = ELFmetadata;			// p_metadata_addr points to the same address as metadata_addr
 		//*(td->td_proc->p_metadata_addr) = *ELFmetadata;		// Copy CONTENTS of the pointed address. Pointers point to different addresses
-		td->td_proc->p_metadata_size = payload_size;
+		////td->td_proc->p_metadata_size = payload_size;
 
-
-			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
-			//////////////
 		
-	}
+	
 	
 
 	//////////////
@@ -990,7 +996,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
     /////////////////
 	//@@@@@@@@log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // POST p_metadata_section_flag: %d\n", td->td_proc->p_metadata_section_flag);
-    //log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
+
     /////////////////
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -1020,7 +1026,9 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
+		////////////
+		log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
+		////////////
 
 	for (i = 0; i < hdr->e_phnum; i++) {
 

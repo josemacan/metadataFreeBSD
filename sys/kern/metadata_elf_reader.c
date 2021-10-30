@@ -440,16 +440,18 @@ ret:
 }
 */
 
-int copyMetadataToProc(void *metadata_addr, struct thread *td){
-	int ret = 0;
+void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_size, struct thread *td){
 
-	// ret -1 if error; else, num chars that would have been printed if the size were unlimited (not including final \0)
-	//ret = snprintf(td->td_proc->p_metadata, MAXHOSTNAMELEN, "%s", metadata_addr);
-
+	/* * METADATA: proc struct metadata pointer points to returned address */
 	//*td->td_proc->p_metadata_addr = *metadata_addr;
 	td->td_proc->p_metadata_addr = metadata_addr;
 
-	return ret;
+	/* * METADATA: Assign metadata returned flag to proc struct */
+	td->td_proc->p_metadata_section_flag = returned_flag;
+
+	/* * METADATA: Assign metadata returned size to proc struct */
+	td->td_proc->p_metadata_size = payload_size;
+	
 }
 
 char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
