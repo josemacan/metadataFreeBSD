@@ -947,12 +947,14 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	
 	if(returned_flag == 1){
-		char* pChar;
-		pChar = (char*) ELFmetadata;
+		//char* pChar;
+		//pChar = (char*) ELFmetadata;
 
 			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
+			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
 			//////////////
+
+		// Guardar en struct proc, guardar direcciom del puntero, tamanio del payload y el flag de metadata existente
 
 		/*
 		int ret_copymetadata = 0;
