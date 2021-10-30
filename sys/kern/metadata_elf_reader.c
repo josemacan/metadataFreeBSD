@@ -68,7 +68,7 @@ MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " 
 #define FUNC1CHARP_LEN 51
 
 void* 
-getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag){
+getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag, size_t* payload_size){
 
     /////////////////
     log(LOG_INFO, "\n\t\t 1) ** getMetadataSectionPayload ** has been called\n");
@@ -207,7 +207,7 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 		/////////////////////
 
         // 13) Return sectiondata pointer
-
+		*payload_size = sectiondata_size;
 		*return_flag = 1;
         goto ret;
 	} 
