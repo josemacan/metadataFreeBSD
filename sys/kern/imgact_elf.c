@@ -969,7 +969,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		}
 		*/
 
-		td->td_proc->p_metadata_addr = metadata_addr			// p_metadata_addr points to the same address as metadata_addr
+		td->td_proc->p_metadata_addr = ELFmetadata			// p_metadata_addr points to the same address as metadata_addr
 		//*(td->td_proc->p_metadata_addr) = *metadata_addr;		// Copy CONTENTS of the pointed address. Pointers point to different addresses
 		td->td_proc->p_metadata_size = payload_size;
 
