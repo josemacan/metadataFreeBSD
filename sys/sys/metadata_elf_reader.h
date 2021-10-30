@@ -26,6 +26,7 @@ typedef struct {
 	int num_a;
 	int num_b;
 	char caracter;
+	size_t int_size;
 } Payload;
 
 // ********* FUNCTIONS ********* 

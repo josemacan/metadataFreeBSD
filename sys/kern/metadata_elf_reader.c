@@ -258,7 +258,7 @@ void decodeMetadataSection(struct thread *td){
 	memcpy(&decod_payload, td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 
 	/////////////
-		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // decod_payload //// num a: %d - num b: %d - caracter: %c\n", decod_payload.num_a, decod_payload.num_b, decod_payload.caracter);
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // decod_payload //// num a: %d - num b: %d - caracter: %c - int size: %lu\n", decod_payload.num_a, decod_payload.num_b, decod_payload.caracter, decod_payload.int_size);
 	/////////////
 }
 
