@@ -884,7 +884,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	size_t payload_size = 0;
 	void* ELFmetadata = getMetadataSectionPayload(hdr, imgp, &returned_flag, &payload_size);
 		//////////////
-		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** METADATA: %p -- PAYLOAD SIZE: %u -- RETURNED FLAG: %d ***\n", ELFmetadata, payload_size , returned_flag);
+		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** METADATA: %p -- PAYLOAD SIZE: %lu -- RETURNED FLAG: %d ***\n", ELFmetadata, payload_size , returned_flag);
 		//////////////
 
 		///////////////
