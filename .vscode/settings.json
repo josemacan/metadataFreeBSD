@@ -4,6 +4,7 @@
         "valarray": "c",
         "param.h": "c",
         "random": "c",
-        "ratio": "c"
+        "ratio": "c",
+        "*.c0": "c"
     }
 }
