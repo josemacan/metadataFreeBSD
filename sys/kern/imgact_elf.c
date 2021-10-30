@@ -948,12 +948,19 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	
 	if(returned_flag == 1){
 
+		/* COPY ADDRESS OF THE ALLOCATED SPACE CONTAINING THE METADATA, THE RETURNED FLAG OF ITS SEARCH AND THE SIZE OF THE METADATA SECTION 
+		TO THE PROC STRUCT ASSOCIATED TO THE ACTUAL THREAD*/
+
 		copyMetadataToProc(ELFmetadata, returned_flag, payload_size, td);
 
 			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
+				log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 			//////////////
 	
+		/* DECODE THE METADATA SENT IN ELF AND PRINT THE VALUES OF THE PAYLOAD STRUCT MEMBERS*/
+
+		decodeMetadataSection(td);
+
 	}
 
 
