@@ -938,12 +938,23 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	interp = interp_buf = NULL;
 	td = curthread;
 
+	/************************************************************/
+	/************************************************************/
+	/************************************************************/
  	/* * METADATA: Assign metadata returned flag to proc struct */
 
 	td->td_proc->p_metadata_section_flag = returned_flag;
 
-	/*
+	
 	if(returned_flag == 1){
+		char* pChar;
+		pChar = (char*) ELFmetadata;
+
+			//////////////
+			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
+			//////////////
+
+		/*
 		int ret_copymetadata = 0;
 
 		ret_copymetadata = copyMetadataToProc(ELFmetadata, td);
@@ -953,8 +964,10 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			//////////////
 			return (-1);
 		}
+
+		*/
 	}
-	*/
+	
 
 	//////////////
 	//@@@@@@@@log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- Metadata saved in proc struct asociated to td: %s\n", td->td_proc->p_metadata);
