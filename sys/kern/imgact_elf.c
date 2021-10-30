@@ -951,12 +951,13 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		//pChar = (char*) ELFmetadata;
 
 			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
+			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- PRE ASSINGMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 			//////////////
 
 		// Guardar en struct proc, guardar direcciom del puntero, tamanio del payload y el flag de metadata existente
 
 		/*
+
 		int ret_copymetadata = 0;
 
 		ret_copymetadata = copyMetadataToProc(ELFmetadata, td);
@@ -966,8 +967,17 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			//////////////
 			return (-1);
 		}
-
 		*/
+
+		td->td_proc->p_metadata_addr = metadata_addr			// p_metadata_addr points to the same address as metadata_addr
+		//*(td->td_proc->p_metadata_addr) = *metadata_addr;		// Copy CONTENTS of the pointed address. Pointers point to different addresses
+		td->td_proc->p_metadata_size = payload_size;
+
+
+			//////////////
+			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
+			//////////////
+		
 	}
 	
 
