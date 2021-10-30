@@ -186,7 +186,7 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
 		// 10) Add end of string
 		
-		sectiondata[sectiondata_size] = '\0';    // ******************** BORRAR
+		//sectiondata[sectiondata_size] = '\0';    // ******************** BORRAR
 
 		// 11) Read section data
 
@@ -254,7 +254,7 @@ ret:
 }
 
 
-
+/*
 char* 
 getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag){
 
@@ -438,6 +438,7 @@ ret:
 	//return NULL;
 
 }
+*/
 
 int copyMetadataToProc(char *metadata, struct thread *td){
 	int ret = 0;
