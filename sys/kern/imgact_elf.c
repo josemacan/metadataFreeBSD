@@ -951,7 +951,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		pChar = (char*) ELFmetadata;
 
 			//////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
+			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- pChar: %s\n", pChar);
 			//////////////
 
 		/*
