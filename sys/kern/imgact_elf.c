@@ -959,8 +959,10 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	
 		/* DECODE THE METADATA SENT IN ELF AND PRINT THE VALUES OF THE PAYLOAD STRUCT MEMBERS*/
 
+		/* BORRAR ************************
 		decodeMetadataSection(td);
-
+		*/
+	
 	}
 
 

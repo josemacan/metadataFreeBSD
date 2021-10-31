@@ -5,6 +5,7 @@
         "param.h": "c",
         "random": "c",
         "ratio": "c",
-        "*.c0": "c"
+        "*.c0": "c",
+        "metadata_elf_reader.h": "c"
     }
 }
