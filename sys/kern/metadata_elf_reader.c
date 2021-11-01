@@ -270,6 +270,11 @@ void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_s
 }
 
 void decodeMetadataSection(struct thread *td){
+
+	/////////////
+		log(LOG_INFO, "\t\t 4) ** decodeMetadataSection() ** has been called\n");
+	/////////////
+
 	/* 1) Get Metadata_Hdr address using:
 		- Start of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size) - sizeof(Metadata_Hdr)
 		- End of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
@@ -282,10 +287,18 @@ void decodeMetadataSection(struct thread *td){
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // metadata_end_addr: %p - metadata_hdr_start_addr: %p \n", metadata_end_addr, metadata_hdr_start_addr);
 	/////////////
 
-	//Metadata_Hdr metadata_header_decod;
-	//memcpy(&decod_payload, td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
+	Metadata_Hdr metadata_header_decod;
+	memcpy(&metadata_header_decod, metadata_hdr_start_addr, sizeof(Metadata_Hdr));
+
+			////////////
+			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Metadata_Hdr = metadata_header_decod //// m_ph_offset: %ld - m_number_payloads: %d - ph_size: %lu - *payloadhdr_list: %p\n", 
+				metadata_header_decod.m_ph_offset, metadata_header_decod.m_number_payloads, metadata_header_decod.ph_size, metadata_header_decod.payloadhdr_list);
+			////////////
+
+
 
 	/////////////
-		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // \n");
+		log(LOG_INFO, "\t\t 4) ** decodeMetadataSection() ** EXIT\n");
 	/////////////
+
 }
