@@ -862,6 +862,16 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	hdr = (const Elf_Ehdr *)imgp->image_header;
 
+		/*
+	 * Do we have a valid ELF header ?
+	 *
+	 * Only allow ET_EXEC & ET_DYN here, reject ET_DYN later
+	 * if particular brand doesn't support it.
+	 */
+	if (__elfN(check_header)(hdr) != 0 ||
+	    (hdr->e_type != ET_EXEC && hdr->e_type != ET_DYN))
+		return (-1);
+
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	/* 1) Call getMetadataSectionPayload() function and print metadata
@@ -871,13 +881,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		-1: error in retrieving metadata (allocation problems, etc).
 		1: metadata section was found in ELF and section data correctly retrieved.
 		2: metadata section was not found in ELF.
-	
-	*/
 
-	/*
-	if(curthread->td_proc->p_metadata_section_flag == 0){
-
-	}
 	*/
 
 	int returned_flag = 0;
@@ -886,10 +890,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		//////////////
 		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** METADATA: %p -- PAYLOAD SIZE: %lu -- RETURNED FLAG: %d ***\n", ELFmetadata, payload_size , returned_flag);
 		//////////////
-
-		///////////////
-
-		///////////////
 	if(ELFmetadata == NULL && returned_flag == -1){
 		//////////////
 		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getMetadataSectionPayload()\n");
@@ -901,15 +901,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-	
 
 
-	/*
-	 * Do we have a valid ELF header ?
-	 *
-	 * Only allow ET_EXEC & ET_DYN here, reject ET_DYN later
-	 * if particular brand doesn't support it.
-	 */
-	if (__elfN(check_header)(hdr) != 0 ||
-	    (hdr->e_type != ET_EXEC && hdr->e_type != ET_DYN))
-		return (-1);
+
 
 	/*
 	 * From here on down, we return an errno, not -1, as we've
@@ -962,75 +954,8 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		/* BORRAR ************************
 		decodeMetadataSection(td);
 		*/
-	
+
 	}
-
-
-		//char* pChar;
-		//pChar = (char*) ELFmetadata;
-
-			//////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- PRE ASSINGMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
-			//////////////
-
-		// Guardar en struct proc, guardar direcciom del puntero, tamanio del payload y el flag de metadata existente
-
-		/*
-
-		int ret_copymetadata = 0;
-
-		ret_copymetadata = copyMetadataToProc(ELFmetadata, td);
-		if(ret_copymetadata == -1){
-			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR copyMetadataToProc()\n");
-			//////////////
-			return (-1);
-		}
-		*/
-
-		//////td->td_proc->p_metadata_addr = ELFmetadata;			// p_metadata_addr points to the same address as metadata_addr
-		//*(td->td_proc->p_metadata_addr) = *ELFmetadata;		// Copy CONTENTS of the pointed address. Pointers point to different addresses
-		////td->td_proc->p_metadata_size = payload_size;
-
-		
-	
-	
-
-	//////////////
-	//@@@@@@@@log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- Metadata saved in proc struct asociated to td: %s\n", td->td_proc->p_metadata);
-	//////////////
-	
-
-	//////////////////////
-
-    /////////////////
-	//@@@@@@@@log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // POST p_metadata_section_flag: %d\n", td->td_proc->p_metadata_section_flag);
-
-    /////////////////
-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-	
-	/*
-
-	if(td->td_proc->p_metadata_section_flag == 1){
-		int returned_flag_payload = 0;
-    	int function_num_payload = 3;
-		
-		char* retrieved_payload = getPayloadPerFunction(td, function_num_payload, &returned_flag_payload);
-				//////////////
-				log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** PAYLOAD RETRIEVED: %s -- FUNCTION NUM PAYLOAD: %d -- RETURNED FLAG PAYLOAD: %d ***\n", retrieved_payload, function_num_payload, returned_flag_payload );
-				//////////////
-	
-		
-		if(retrieved_payload == NULL && returned_flag_payload == -1){
-			//////////////
-			log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getPayloadPerFunction()\n");
-			//////////////
-			return (-1);
-		}
-		
-	} */
     
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
