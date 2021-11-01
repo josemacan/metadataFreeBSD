@@ -5,6 +5,8 @@
 #include <sys/param.h>
 #include <sys/imgact_elf.h>
 #include <sys/proc.h>
+#include <sys/metadata_payloads.h>
+
 
 #define SECCION_BUSCADA ".metadata"
 
