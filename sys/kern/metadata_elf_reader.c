@@ -295,7 +295,17 @@ void decodeMetadataSection(struct thread *td){
 				metadata_header_decod.m_ph_offset, metadata_header_decod.m_number_payloads, metadata_header_decod.ph_size, metadata_header_decod.payloadhdr_list);
 			////////////
 
+	/* 2) Get Payload_Hdr address:
+		- Start of Payload_Hdr addr = Start of Metadata_Hdr addr - (Metadata_Hdr.m_number_payloads * Metadata_Hdr.ph_size)
+		- End of Payload_Hdr addr = Start of Metadata_Hdr addr
+	*/
+	
+	size_t payload_headers_table_size = (metadata_header_decod.m_number_payloads) * (metadata_header_decod.ph_size);
+	void* payload_hdrs_table_start_addr = (char *) (metadata_hdr_start_addr) - payload_headers_table_size;
 
+	/////////////
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_hdrs_table_start_addr: %p - payload_headers_table_size: %lu \n", payload_hdrs_table_start_addr, payload_headers_table_size);
+	/////////////
 
 	/////////////
 		log(LOG_INFO, "\t\t 4) ** decodeMetadataSection() ** EXIT\n");
