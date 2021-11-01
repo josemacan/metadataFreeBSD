@@ -332,11 +332,12 @@ void decodeMetadataSection(struct thread *td){
 				- End addr of last Payload  = Start addr of Payload_Hdr
 			*/		
 
-		payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
 
 			/////////////
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////	
+
+			payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
 
 	}
 
