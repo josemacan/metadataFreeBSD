@@ -312,6 +312,7 @@ void decodeMetadataSection(struct thread *td){
 
 	//Payload_A payload_decod;
 	void* payload_addr = NULL;
+	payload_addr = td->td_proc->p_metadata_addr;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
 		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
