@@ -8,12 +8,18 @@ typedef struct {
     size_t int_size;
 } Payload_A;
 
+typedef struct {
+	int num_a;
+	char char_B1;
+	char char_B2;
+    size_t char_size;
+} Payload_B;
 
 typedef struct {
 	int ph_function_number;         // Function number associated to the payload
 	off_t ph_offset;                // Offset to the payload                 
     size_t ph_size;                 // Size of the payload
-    Payload_A *ph_payload;           // Payload A (core data)
+    void *ph_payload;               // Payload address
 } Payload_Hdr;
 
 typedef struct {

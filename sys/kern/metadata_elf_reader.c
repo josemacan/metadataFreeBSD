@@ -310,7 +310,9 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	Payload_A payload_decod;
+	Payload_A payloadA_decod;
+	Payload_B payloadB_decod;
+	
 	void* payload_addr = (char *) (td->td_proc->p_metadata_addr);
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
@@ -336,12 +338,28 @@ void decodeMetadataSection(struct thread *td){
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////
 
-		memcpy(&payload_decod, payload_addr, sizeof(Payload_A));	
+		if(payload_header_decod.ph_function_number == 1){
+
+			memcpy(&payloadA_decod, payload_addr, sizeof(Payload_A));	
 
 			////////////
-				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_A = payload_decod //// num a: %d - num b: %d - caracter: %c - int_size: %lu\n", 
-					payload_decod.num_a, payload_decod.num_b, payload_decod.caracter, payload_decod.int_size);
+				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_A = payloadA_decod //// num a: %d - num b: %d - caracter: %c - int_size: %lu\n", 
+					payloadA_decod.num_a, payloadA_decod.num_b, payloadA_decod.caracter, payloadA_decod.int_size);
 			////////////
+		}
+		else if(payload_header_decod.ph_function_number == 2){
+
+			memcpy(&payloadB_decod, payload_addr, sizeof(Payload_B));	
+
+			////////////
+				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_B = payloadB_decod //// num a: %d - char_B1: %c - char_B2: %c - char_size: %lu\n", 
+					payloadB_decod.num_a, payloadB_decod.char_B1, payloadB_decod.char_B2, payloadB_decod.char_size);
+			////////////			
+		}
+		else{
+			
+		}
+
 
 		payload_addr = (char *) (payload_addr) + payload_header_decod.ph_size;
 
