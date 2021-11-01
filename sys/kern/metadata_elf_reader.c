@@ -275,7 +275,14 @@ void decodeMetadataSection(struct thread *td){
 		- End of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
 	*/
 
-	//Payload decod_payload;
+	void* metadata_end_addr = td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size;
+	void* metadata_hdr_start_addr = metadata_end_addr - sizeof(Metadata_Hdr);
+	
+	/////////////
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // metadata_end_addr: %p - metadata_hdr_start_addr: %p \n", metadata_end_addr, metadata_hdr_start_addr);
+	/////////////
+
+	//Metadata_Hdr metadata_header_decod;
 	//memcpy(&decod_payload, td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 
 	/////////////
