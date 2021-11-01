@@ -894,7 +894,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		//////////////
 		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getMetadataSectionPayload()\n");
 		//////////////
-		return (-1);
+		return (ENOEXEC);
 	}
 
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
