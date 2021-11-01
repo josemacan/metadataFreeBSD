@@ -310,7 +310,7 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	Payload_A payload_decod;
+	//Payload_A payload_decod;
 	void* payload_addr = NULL;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
