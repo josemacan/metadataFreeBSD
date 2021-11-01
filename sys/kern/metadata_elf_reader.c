@@ -336,7 +336,7 @@ void decodeMetadataSection(struct thread *td){
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////	
 
-			//payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
+			payload_addr = (char *) (payload_addr) + payload_header_decod.ph_size;
 
 
 
