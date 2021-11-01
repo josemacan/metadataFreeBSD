@@ -310,7 +310,7 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	//Payload_A payload_decod;
+	Payload_A payload_decod;
 	void* payload_addr = (char *) (td->td_proc->p_metadata_addr);
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
@@ -334,9 +334,16 @@ void decodeMetadataSection(struct thread *td){
 
 			/////////////
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
-			/////////////	
+			/////////////
 
-			payload_addr = (char *) (payload_addr) + payload_header_decod.ph_size;
+		memcpy(&payload_decod, payload_addr, sizeof(Payload_A));	
+
+			////////////
+				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_A = payload_decod //// num a: %d - num b: %d - caracter: %c - int_size: %lu\n", 
+					payload_decod.num_a, payload_decod.num_b, payload_decod.caracter, payload_decod.int_size);
+			////////////
+
+		payload_addr = (char *) (payload_addr) + payload_header_decod.ph_size;
 
 
 
