@@ -307,6 +307,20 @@ void decodeMetadataSection(struct thread *td){
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_hdrs_table_start_addr: %p - payload_headers_table_size: %lu \n", payload_hdrs_table_start_addr, payload_headers_table_size);
 	/////////////
 
+	Payload_Hdr payload_header_decod;
+	void* payhdr_addr = NULL;
+
+	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
+		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
+		//memcpy(&payload_header_decod, payload_hdrs_table_start_addr, sizeof(Payload_Hdr));
+		
+		/////////////
+			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payhdr_addr[%d]: %p\n", k, payhdr_addr);
+		/////////////
+
+	}
+
+
 	/////////////
 		log(LOG_INFO, "\t\t 4) ** decodeMetadataSection() ** EXIT\n");
 	/////////////
