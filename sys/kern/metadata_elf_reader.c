@@ -253,14 +253,7 @@ ret:
 
 }
 
-void decodeMetadataSection(struct thread *td){
-	Payload decod_payload;
-	memcpy(&decod_payload, td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 
-	/////////////
-		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // decod_payload //// num a: %d - num b: %d - caracter: %c - int size: %lu\n", decod_payload.num_a, decod_payload.num_b, decod_payload.caracter, decod_payload.int_size);
-	/////////////
-}
 
 void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_size, struct thread *td){
 
@@ -276,71 +269,16 @@ void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_s
 	
 }
 
-char* getPayloadPerFunction(struct thread *td, int num_function, int* return_flag){ 
-
-	//int func1_len = FUNCTION_NDIGITS+1+1+1;
-	//int func1_len = 50+1;
-
-	if(num_function == UND){
-		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR - function number is 0 - INVALID\n");
-		goto fail;
-	}
-
-	char metadataSectionData[MAXHOSTNAMELEN];
-	//char returned_payloadstring[MAXHOSTNAMELEN];
-
-	memcpy(metadataSectionData, td->td_proc->p_metadata, sizeof(td->td_proc->p_metadata));	// Copy metadata from proc struct
-
-	//////////////////
-		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- td->td_proc->p_metadata: %s\n", td->td_proc->p_metadata);
-		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- metadataSectionData: %s\n", metadataSectionData);
-	//////////////////
-
-	char* func1charp = (char *) malloc(MAXBUFFER_PAYLOAD, M_FUNC1_CHARP, M_WAITOK | M_ZERO);
-	if(func1charp == NULL){
-		log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- ERROR IN MALLOC - func1\n");
-    	goto fail;
-	}
-	func1charp[MAXBUFFER_PAYLOAD] = '\0';
-
-	//sprintf(func1charp, "[%d:", num_function);
-	
-
-	//char func1charp[FUNC1CHARP_LEN] = {0};
-	//sprintf(func1charp, "[%d:", num_function);
-
-	//char func1[50] = {0};
-	//char func1[FUNCTION_NDIGITS+1+1+1];
-	//snprintf(func1, FUNCTION_NDIGITS+1+1, "[%d:",num_function);
-	//int lenspf = 0; 
-	//lenspf = snprintf(func1, 49, "[%d:", num_function);
-
-	////////////////////////
-	//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- sprintf len: %d\n", lenspf);
-	///////////////////////
-	/*
-	log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- func1: ");
-	for(int zz = 0; zz < sizeof(func1); zz++){
-		log(LOG_INFO, "%c", func1[zz]);
-		}
-	log(LOG_INFO, "\n");
+void decodeMetadataSection(struct thread *td){
+	/* 1) Get Metadata_Hdr address using:
+		- Start of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size) - sizeof(Metadata_Hdr)
+		- End of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
 	*/
-	////////////////
 
-		//log(LOG_INFO, "\t\t 3) // getPayloadPerFunction() // LectorELF // -- func1: %s\n", func1);
-	//////////////////	
+	//Payload decod_payload;
+	//memcpy(&decod_payload, td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
 
-	goto ret;
-
-fail:
-	*return_flag = -1;
-    return NULL;
-
-ret: 
-
-	free(func1charp, M_FUNC1_CHARP);
-
-	*return_flag = 2;
-	return NULL;
-
+	/////////////
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // \n");
+	/////////////
 }
