@@ -307,7 +307,7 @@ void decodeMetadataSection(struct thread *td){
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_hdrs_table_start_addr: %p - payload_headers_table_size: %lu \n", payload_hdrs_table_start_addr, payload_headers_table_size);
 	/////////////
 
-	Payload_Hdr payload_header_decod;
+	//Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
