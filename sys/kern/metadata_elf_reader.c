@@ -307,16 +307,22 @@ void decodeMetadataSection(struct thread *td){
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_hdrs_table_start_addr: %p - payload_headers_table_size: %lu \n", payload_hdrs_table_start_addr, payload_headers_table_size);
 	/////////////
 
-	//Payload_Hdr payload_header_decod;
+	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
 		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
-		//memcpy(&payload_header_decod, payload_hdrs_table_start_addr, sizeof(Payload_Hdr));
 		
-		/////////////
-			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payhdr_addr[%d]: %p\n", k, payhdr_addr);
-		/////////////
+			/////////////
+				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payhdr_addr[%d]: %p\n", k, payhdr_addr);
+			/////////////
+
+		memcpy(&payload_header_decod, payhdr_addr, sizeof(Payload_Hdr));
+
+			////////////
+			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Payload_Hdr = payload_header_decod[%d] //// ph_function_number: %d - ph_offset: %ld - ph_size: %lu - *ph_payload: %p\n", 
+				k, payload_header_decod.ph_function_number, payload_header_decod.ph_offset, payload_header_decod.ph_size, payload_header_decod.ph_payload);
+			////////////	
 
 	}
 
