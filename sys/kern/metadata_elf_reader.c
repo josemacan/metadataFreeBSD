@@ -311,7 +311,8 @@ void decodeMetadataSection(struct thread *td){
 	void* payhdr_addr = NULL;
 
 	//Payload_A payload_decod;
-	void* payload_addr = td->td_proc->p_metadata_addr;
+	void* payload_addr = NULL;
+	payload_addr = td->td_proc->p_metadata_addr;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
 		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
@@ -332,12 +333,13 @@ void decodeMetadataSection(struct thread *td){
 				- End addr of last Payload  = Start addr of Payload_Hdr
 			*/		
 
-
 			/////////////
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////	
 
-			payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
+			//payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
+
+
 
 	}
 
