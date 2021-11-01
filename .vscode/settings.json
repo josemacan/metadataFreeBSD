@@ -8,6 +8,7 @@
         "*.c0": "c",
         "metadata_elf_reader.h": "c",
         "string.h": "c",
-        "metadata_payloads.h": "c"
+        "metadata_payloads.h": "c",
+        "stdio.h": "c"
     }
 }

@@ -1,8 +1,6 @@
 #ifndef METADATA_PAYLOADS_H_
 #define	METADATA_PAYLOADS_H_
 
-#include <stdio.h>
-
 typedef struct {
 	int num_a;
 	int num_b;
