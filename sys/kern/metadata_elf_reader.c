@@ -276,8 +276,8 @@ void decodeMetadataSection(struct thread *td){
 	/////////////
 
 	/* 1) Get Metadata_Hdr address using:
-		- Start of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size) - sizeof(Metadata_Hdr)
-		- End of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
+		- Start addr of Metadata_Hdr  = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size) - sizeof(Metadata_Hdr)
+		- End addr of Metadata_Hdr  = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
 	*/
 
 	void* metadata_end_addr = (char *) (td->td_proc->p_metadata_addr) + td->td_proc->p_metadata_size;
@@ -296,8 +296,8 @@ void decodeMetadataSection(struct thread *td){
 			////////////
 
 	/* 2) Get Payload_Hdr address:
-		- Start of Payload_Hdr addr = Start of Metadata_Hdr addr - (Metadata_Hdr.m_number_payloads * Metadata_Hdr.ph_size)
-		- End of Payload_Hdr addr = Start of Metadata_Hdr addr
+		- Start addr of Payload_Hdr  = Start of Metadata_Hdr addr - (Metadata_Hdr.m_number_payloads * Metadata_Hdr.ph_size)
+		- End addr of Payload_Hdr  = Start of Metadata_Hdr addr
 	*/
 	
 	size_t payload_headers_table_size = (metadata_header_decod.m_number_payloads) * (metadata_header_decod.ph_size);
@@ -309,6 +309,9 @@ void decodeMetadataSection(struct thread *td){
 
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
+
+	Payload_A payload_decod;
+	void* payload_addr = NULL;
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
 		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
@@ -322,7 +325,18 @@ void decodeMetadataSection(struct thread *td){
 			////////////
 			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Payload_Hdr = payload_header_decod[%d] //// ph_function_number: %d - ph_offset: %ld - ph_size: %lu - *ph_payload: %p\n", 
 				k, payload_header_decod.ph_function_number, payload_header_decod.ph_offset, payload_header_decod.ph_size, payload_header_decod.ph_payload);
-			////////////	
+			////////////
+
+			/* 3) Get each Payload address:
+				- Start addr of first Payload  = Start of metadata section
+				- End addr of last Payload  = Start addr of Payload_Hdr
+			*/		
+
+		payload_addr = (char *) payload_addr + payload_header_decod.ph_size;
+
+			/////////////
+				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
+			/////////////	
 
 	}
 
