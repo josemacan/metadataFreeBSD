@@ -275,7 +275,7 @@ void decodeMetadataSection(struct thread *td){
 		- End of Metadata_Hdr addr = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
 	*/
 
-	void* metadata_end_addr = (char *) (td->td_proc->p_metadata_addr) + (char *) (td->td_proc->p_metadata_size);
+	void* metadata_end_addr = (char *) (td->td_proc->p_metadata_addr) + td->td_proc->p_metadata_size;
 	void* metadata_hdr_start_addr = (char *) (metadata_end_addr) - sizeof(Metadata_Hdr);
 	
 	/////////////
