@@ -291,8 +291,8 @@ void decodeMetadataSection(struct thread *td){
 	memcpy(&metadata_header_decod, metadata_hdr_start_addr, sizeof(Metadata_Hdr));
 
 			////////////
-			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Metadata_Hdr = metadata_header_decod //// m_ph_offset: %ld - m_number_payloads: %d - ph_size: %lu - *payloadhdr_list: %p\n", 
-				metadata_header_decod.m_ph_offset, metadata_header_decod.m_number_payloads, metadata_header_decod.ph_size, metadata_header_decod.payloadhdr_list);
+			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Metadata_Hdr = metadata_header_decod //// m_number_payloads: %d - ph_size: %lu\n", 
+				 metadata_header_decod.m_number_payloads, metadata_header_decod.ph_size);
 			////////////
 
 	/* 2) Get Payload_Hdr address:
@@ -325,8 +325,8 @@ void decodeMetadataSection(struct thread *td){
 		memcpy(&payload_header_decod, payhdr_addr, sizeof(Payload_Hdr));
 
 			////////////
-			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Payload_Hdr = payload_header_decod[%d] //// ph_function_number: %d - ph_offset: %ld - ph_size: %lu - *ph_payload: %p\n", 
-				k, payload_header_decod.ph_function_number, payload_header_decod.ph_offset, payload_header_decod.ph_size, payload_header_decod.ph_payload);
+			log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // Payload_Hdr = payload_header_decod[%d] //// p_function_number: %d - ph_size: %lu\n", 
+				k, payload_header_decod.p_function_number, payload_header_decod.p_size);
 			////////////
 
 			/* 3) Get each Payload address:
@@ -338,7 +338,7 @@ void decodeMetadataSection(struct thread *td){
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////
 
-		if(payload_header_decod.ph_function_number == 1){
+		if(payload_header_decod.p_function_number == 1){
 
 			memcpy(&payloadA_decod, payload_addr, sizeof(Payload_A));	
 
@@ -347,7 +347,7 @@ void decodeMetadataSection(struct thread *td){
 					payloadA_decod.num_a, payloadA_decod.num_b, payloadA_decod.caracter, payloadA_decod.int_size);
 			////////////
 		}
-		else if(payload_header_decod.ph_function_number == 2){
+		else if(payload_header_decod.p_function_number == 2){
 
 			memcpy(&payloadB_decod, payload_addr, sizeof(Payload_B));	
 
@@ -357,11 +357,11 @@ void decodeMetadataSection(struct thread *td){
 			////////////			
 		}
 		else{
-			
+
 		}
 
 
-		payload_addr = (char *) (payload_addr) + payload_header_decod.ph_size;
+		payload_addr = (char *) (payload_addr) + payload_header_decod.p_size;
 
 
 
