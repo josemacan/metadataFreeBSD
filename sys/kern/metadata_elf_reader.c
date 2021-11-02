@@ -276,15 +276,15 @@ void decodeMetadataSection(struct thread *td){
 	/////////////
 
 	/* 1) Get Metadata_Hdr address using:
-		- Start addr of Metadata_Hdr  = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size) - sizeof(Metadata_Hdr)
-		- End addr of Metadata_Hdr  = (td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size)
+		- Start addr of Metadata_Hdr  = td->td_proc->p_metadata_addr
+		- End addr of Metadata_Hdr  = td->td_proc->p_metadata_addr + sizeof(Metadata_Hdr) 
 	*/
 
-	void* metadata_end_addr = (char *) (td->td_proc->p_metadata_addr) + td->td_proc->p_metadata_size;
-	void* metadata_hdr_start_addr = (char *) (metadata_end_addr) - sizeof(Metadata_Hdr);
+	void* metadata_hdr_start_addr = (char *) (td->td_proc->p_metadata_addr);
+	void* metadata_hdr_end_addr = (char *) (metadata_end_addr) - sizeof(Metadata_Hdr);
 	
 	/////////////
-		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // metadata_end_addr: %p - metadata_hdr_start_addr: %p \n", metadata_end_addr, metadata_hdr_start_addr);
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // metadata_hdr_end_addr: %p - metadata_hdr_start_addr: %p \n", metadata_hdr_end_addr, metadata_hdr_start_addr);
 	/////////////
 
 	Metadata_Hdr metadata_header_decod;
@@ -295,13 +295,14 @@ void decodeMetadataSection(struct thread *td){
 				 metadata_header_decod.m_number_payloads, metadata_header_decod.ph_size);
 			////////////
 
-	/* 2) Get Payload_Hdr address:
-		- Start addr of Payload_Hdr  = Start of Metadata_Hdr addr - (Metadata_Hdr.m_number_payloads * Metadata_Hdr.ph_size)
-		- End addr of Payload_Hdr  = Start of Metadata_Hdr addr
+	/* 2) Get Payload_Hdr table address:
+		- Start addr of Payload_Hdr table  = td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size - (Metadata_Hdr.m_number_payloads * Metadata_Hdr.ph_size)
+		- End addr of Payload_Hdr table = td->td_proc->p_metadata_addr + td->td_proc->p_metadata_size
 	*/
 	
 	size_t payload_headers_table_size = (metadata_header_decod.m_number_payloads) * (metadata_header_decod.ph_size);
-	void* payload_hdrs_table_start_addr = (char *) (metadata_hdr_start_addr) - payload_headers_table_size;
+	void* payload_hdrs_table_end_addr = (char *) (td->td_proc->p_metadata_addr) + (td->td_proc->p_metadata_size);
+	void* payload_hdrs_table_start_addr = (char *) (payload_hdrs_table_end_addr) - payload_headers_table_size;
 
 	/////////////
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_hdrs_table_start_addr: %p - payload_headers_table_size: %lu \n", payload_hdrs_table_start_addr, payload_headers_table_size);
@@ -313,7 +314,7 @@ void decodeMetadataSection(struct thread *td){
 	Payload_A payloadA_decod;
 	Payload_B payloadB_decod;
 	
-	void* payload_addr = (char *) (td->td_proc->p_metadata_addr);
+	void* payload_addr = (char *) (metadata_hdr_end_addr);
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
 		payhdr_addr = &(((Payload_Hdr *)payload_hdrs_table_start_addr)[k]);
