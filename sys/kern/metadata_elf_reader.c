@@ -281,7 +281,7 @@ void decodeMetadataSection(struct thread *td){
 	*/
 
 	void* metadata_hdr_start_addr = (char *) (td->td_proc->p_metadata_addr);
-	void* metadata_hdr_end_addr = (char *) (metadata_end_addr) - sizeof(Metadata_Hdr);
+	void* metadata_hdr_end_addr = (char *) (metadata_hdr_start_addr) + sizeof(Metadata_Hdr);
 	
 	/////////////
 		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // metadata_hdr_end_addr: %p - metadata_hdr_start_addr: %p \n", metadata_hdr_end_addr, metadata_hdr_start_addr);
