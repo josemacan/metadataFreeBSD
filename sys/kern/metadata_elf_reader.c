@@ -338,7 +338,9 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	
+	Payload_A payloadA_decod;
+	Payload_B payloadB_decod;
+
 	void* payload_addr = (char *) (metadata_hdr_end_addr);
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
@@ -364,6 +366,7 @@ void decodeMetadataSection(struct thread *td){
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////
 
+		/*
 		switch(payload_header_decod.p_function_number){
 			case 1:
 			{
@@ -380,8 +383,9 @@ void decodeMetadataSection(struct thread *td){
 			default:
 				break;
 		}
+		*/
 
-		/*
+		
 
 		if(payload_header_decod.p_function_number == 1){
 
@@ -405,7 +409,7 @@ void decodeMetadataSection(struct thread *td){
 
 		}
 
-		*/
+		
 
 		payload_addr = (char *) (payload_addr) + payload_header_decod.p_size;
 
