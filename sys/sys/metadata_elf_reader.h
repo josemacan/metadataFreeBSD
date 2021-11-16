@@ -36,4 +36,10 @@ typedef struct {
 void* getMetadataSectionPayload(const Elf_Ehdr *, struct image_params *, int *, size_t *);
 void copyMetadataToProc(void *, int, size_t, struct thread *);
 void decodeMetadataSection(struct thread *);
+
+// ********* PAYLOAD FUNCTIONS ********* 
+
+void payload_A_func(Payload_A*, void* );
+void payload_B_func(Payload_B*, void* );
+
 #endif

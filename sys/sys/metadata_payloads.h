@@ -1,6 +1,8 @@
 #ifndef METADATA_PAYLOADS_H_
 #define	METADATA_PAYLOADS_H_
 
+#define PAYLOADS_TOTAL 2 			// IMPORTANT: update this number each time you add or remove a Payload_X struct
+
 typedef struct {
 	int num_a;
 	int num_b;
@@ -25,5 +27,7 @@ typedef struct {
     int m_number_payloads;          // Total number of different payloads in the section (num of entries in the payload header table)               
     size_t ph_size;                 // Size of an entry in the payload header table
 } Metadata_Hdr;
+
+
 
 #endif /* METADATA_PAYLOADS_H_ */

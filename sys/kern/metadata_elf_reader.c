@@ -67,6 +67,33 @@ MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " 
 #define MAXBUFFER_PAYLOAD 1024
 #define FUNC1CHARP_LEN 51
 
+typedef void (*payload_func)();		// array of function pointers to store each function matching a different payload struct. Definition and instantiation 
+									// in metadata_elf_reader.c
+
+payload_func payload_functions[PAYLOADS_TOTAL] = {&payload_A_func, &payload_B_func};
+
+void payload_A_func(Payload_A* payloadA_decod, void* payload_addr){
+
+	memcpy(payloadA_decod, payload_addr, sizeof(Payload_A));	
+
+	////////////
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_A = payloadA_decod //// num a: %d - num b: %d - caracter: %c - int_size: %lu\n", 
+			payloadA_decod->num_a, payloadA_decod->num_b, payloadA_decod->caracter, payloadA_decod->int_size);
+	////////////
+
+}
+
+void payload_B_func(Payload_B* payloadB_decod, void* payload_addr){
+
+	memcpy(payloadB_decod, payload_addr, sizeof(Payload_B));	
+
+	////////////
+		log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_B = payloadB_decod //// num a: %d - char_B1: %c - char_B2: %c - char_size: %lu\n", 
+			payloadB_decod->num_a, payloadB_decod->char_B1, payloadB_decod->char_B2, payloadB_decod->char_size);
+	////////////		
+}
+
+
 void* 
 getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* return_flag, size_t* payload_size){
 
@@ -311,8 +338,6 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	Payload_A payloadA_decod;
-	Payload_B payloadB_decod;
 	
 	void* payload_addr = (char *) (metadata_hdr_end_addr);
 
@@ -339,6 +364,23 @@ void decodeMetadataSection(struct thread *td){
 				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // LectorELF // payload_addr: %p\n", payload_addr);
 			/////////////
 
+		switch(payload_header_decod.p_function_number){
+			case 1:
+				Payload_A payloadA_decod;
+				payload_functions[payload_header_decod.p_function_number](&payloadA_decod, payload_addr);
+				break;
+
+			case 2:
+				Payload_B payloadB_decod;
+				payload_functions[payload_header_decod.p_function_number](&payloadB_decod, payload_addr);
+				break;
+
+			default:
+				break;
+		}
+
+		/*
+
 		if(payload_header_decod.p_function_number == 1){
 
 			memcpy(&payloadA_decod, payload_addr, sizeof(Payload_A));	
@@ -361,6 +403,7 @@ void decodeMetadataSection(struct thread *td){
 
 		}
 
+		*/
 
 		payload_addr = (char *) (payload_addr) + payload_header_decod.p_size;
 
