@@ -366,15 +366,17 @@ void decodeMetadataSection(struct thread *td){
 
 		switch(payload_header_decod.p_function_number){
 			case 1:
+			{
 				Payload_A payloadA_decod;
 				payload_functions[payload_header_decod.p_function_number](&payloadA_decod, payload_addr);
 				break;
-
+			}
 			case 2:
+			{
 				Payload_B payloadB_decod;
 				payload_functions[payload_header_decod.p_function_number](&payloadB_decod, payload_addr);
 				break;
-
+			}
 			default:
 				break;
 		}
