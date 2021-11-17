@@ -341,8 +341,8 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	Payload_A payloadA_decod;
-	Payload_B payloadB_decod;
+	//Payload_A payloadA_decod;
+	//Payload_B payloadB_decod;
 
 	void* payload_addr = (char *) (metadata_hdr_end_addr);
 
