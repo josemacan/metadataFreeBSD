@@ -62,13 +62,14 @@ __FBSDID("$FreeBSD$");
 static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  // @1: type (must start with 'M_') @2: shortdesc @3: longdesc 
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
-MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
+//MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
 
 #define MAXBUFFER_PAYLOAD 1024
 #define FUNC1CHARP_LEN 51
 
 
-void payload_A_func(Payload_A* payloadA_decod, void* payload_addr){
+//void payload_A_func(Payload_A* payloadA_decod, void* payload_addr){
+void payload_A_func(void* payload_addr, Payload_A* payloadA_decod){
 
 	memcpy(payloadA_decod, payload_addr, sizeof(Payload_A));	
 
@@ -79,7 +80,8 @@ void payload_A_func(Payload_A* payloadA_decod, void* payload_addr){
 
 }
 
-void payload_B_func(Payload_B* payloadB_decod, void* payload_addr){
+//void payload_B_func(Payload_B* payloadB_decod, void* payload_addr){
+void payload_B_func(void* payload_addr, Payload_B* payloadB_decod){ 
 
 	memcpy(payloadB_decod, payload_addr, sizeof(Payload_B));	
 
@@ -90,10 +92,16 @@ void payload_B_func(Payload_B* payloadB_decod, void* payload_addr){
 }
 
 
-typedef void (*payload_func)();		// array of function pointers to store each function matching a different payload struct. Definition and instantiation 
+typedef void (*payload_A_func_wrapper)(void* payload_addr, Payload_A* payloadA_decod);
+typedef void (*payload_B_func_wrapper)(void* payload_addr, Payload_B* payloadB_decod);
+
+
+//typedef void (*payload_func)();	
+typedef void (*payload_func)(void); // array of function pointers to store each function matching a different payload struct. Definition and instantiation 
 									// in metadata_elf_reader.c
 
-payload_func payload_functions[PAYLOADS_TOTAL+1] = {0, &payload_A_func, &payload_B_func};
+//payload_func payload_functions[PAYLOADS_TOTAL+1] = {0, &payload_A_func, &payload_B_func};
+payload_func payload_functions[PAYLOADS_TOTAL+1] = {NULL, (payload_func) payload_A_func, (payload_func) payload_B_func};
 
 
 
@@ -108,9 +116,12 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
  	struct thread *td;
     Elf_Shdr *sectionheader_table;
 	int flags_mallocELFRead = M_WAITOK | M_ZERO;
-	int error;
+	int error = 0;
 	//char error_msg[] = "ERROR";
 	
+	// Asign current thread to td struct
+
+    td = curthread; 
 
     /////////////////
     //log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- Elf_Ehdr -- size of section header table entry: %u\n", hdr->e_shentsize);
@@ -122,6 +133,10 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
 	// 1) Memory allocation to store ELF section header table
 
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 1) Memory allocation to store ELF section header table\n");
+    /////////////////
+
 	// Use M_TEMP allocated memory
 	sectionheader_table = malloc((hdr->e_shentsize)*(hdr->e_shnum), M_ELFHEADER, flags_mallocELFRead );
 	if(sectionheader_table == NULL){
@@ -131,13 +146,33 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
     // 2) Read ELF section header table
 
-	// Lock to serialize the access to the file system
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 2) Lock to serialize the access to the file system\n");
+    /////////////////
 
-	vn_lock(imgp->vp, LK_EXCLUSIVE | LK_RETRY);
+	// Check if VP is locked
+
+	int prev_locked_status = 0;
+	prev_locked_status = VOP_ISLOCKED(imgp->vp);	// 0 -> UNLOCKED, else: previously locked.
+
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 2.1) Is imgp->vp locked?: %d\n", prev_locked_status);
+    /////////////////
+
+	// If not locked, then lock to serialize the access to the file system
+
+	if(prev_locked_status == 0){ // If 0, then UNLOCKED
+		vn_lock(imgp->vp, LK_EXCLUSIVE | LK_RETRY);
+		//vn_lock(imgp->vp, LK_SHARED | LK_RETRY);	
+		//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 2.1) Lock applied - New lock state: %d\n", VOP_ISLOCKED(imgp->vp));
+	}
+
 
 	// Read ELF file to sectionheader_table
-
-	td = curthread;
+	
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 2.2) Read ELF file to sectionheader_table\n");
+    /////////////////
 
 	error = vn_rdwr(UIO_READ, imgp->vp, sectionheader_table, (hdr->e_shentsize)*(hdr->e_shnum), hdr->e_shoff,
 		UIO_SYSSPACE, IO_NODELOCKED, td->td_ucred, NOCRED, NULL, td);
@@ -152,7 +187,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
 	// 3) Elements needed to iterate over each section of the ELF file.
 
-	char* sh_str;
   	char* buff;
 
 	buff = malloc(sectionheader_table[hdr->e_shstrndx].sh_size, M_BUFFER, flags_mallocELFRead);
@@ -160,6 +194,10 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- ERROR IN MALLOC - buff\n");
     	goto fail1;
   	}
+
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 3) Malloc-ated sectionheader_table\n");
+    ///////////////// 	  
 
     // 4) Read buff
 
@@ -170,11 +208,19 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 		goto fail2;
 	}
 
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 4) Buffer read OK\n");
+    ///////////////// 
+
     // 5) Assign
 
-	sh_str = buff;
+	//char* sh_str;
+	//sh_str = buff;
 
 	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- sh_str = buff \n");
+	/////////////////
+	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 5) Buffer assigned OK\n");
+    ///////////////// 
 
 	// 6) Iterate over each section of the section header table
 
@@ -195,7 +241,13 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 		}
 	}
 
+	/////////////////
+	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 6) Iterated over sections\n");
+    ///////////////// 
+
     // 7) Memory allocation to store data of the section
+
+	/*
 
 	void* sectiondata = malloc(sectionheader_table[mm].sh_size, M_SECTION, flags_mallocELFRead);
 	if(sectiondata == NULL){
@@ -203,16 +255,36 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
     	goto fail2;
 	}
 
-	
+	*/
+
     // 8) Check if the desired section (.metadata) was found in earlier iteration
 
+	void* sectiondata;
+
 	if (mm < hdr->e_shnum) {
+
+		// 7) Memory allocation to store data of the section
+
+		sectiondata = malloc(sectionheader_table[mm].sh_size, M_SECTION, flags_mallocELFRead);
+		if(sectiondata == NULL){
+			log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- ERROR IN MALLOC - sectiondata\n");
+			goto fail2;
+		}
+
+		/////////////////
+		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 7) Mallocated for section data\n");
+		///////////////// 
+
 		// 9) Init variables to section data
 		off_t sectiondata_offset = 0;
 		size_t sectiondata_size = 0;
 
 		sectiondata_offset = sectionheader_table[mm].sh_offset;    // Points to the start of the desired section
 		sectiondata_size = sectionheader_table[mm].sh_size;      // Size of the desired section
+
+		/////////////////
+		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 8) Sectiondata offset and size\n");
+		///////////////// 
 
 		// 10) Add end of string
 		
@@ -228,6 +300,11 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 			log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- ERROR vn_rdwr sectiondata %d\n", error);
 			goto fail3;
 		}
+
+
+		/////////////////
+		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 11) Read section data OK\n");
+		///////////////// 
 
 		// 12) Print data of the section
 
@@ -258,22 +335,22 @@ fail2:
     free(buff, M_BUFFER);    
 fail1:
 	free(sectionheader_table, M_ELFHEADER);
+	// Unlock if the vnode was locked in this function. 
+	if(prev_locked_status == 0){ 	// 0 = UNLOCKED before this function.
+		VOP_UNLOCK(imgp->vp, 0);	// Lock applied in this function, then unlock to return to prev lock state
+	}
 fail:
-    // Unlock 
-	VOP_UNLOCK(imgp->vp, 0);
-
-	//strcpy(sectiondata, error_msg);
 	*return_flag = -1;
     return NULL;
-    //return error_msg;
-
 ret:
-	// Unlock 
-	VOP_UNLOCK(imgp->vp, 0);
+	// Unlock if the vnode was locked in this function. 
+	if(prev_locked_status == 0){ 	// 0 = UNLOCKED before this function.
+		VOP_UNLOCK(imgp->vp, 0);	// Lock applied in this function, then unlock to return to prev lock state
+	}
 
 	// Free allocated memory 
-	free(sectionheader_table, M_ELFHEADER);
 	free(buff, M_BUFFER);
+	free(sectionheader_table, M_ELFHEADER);
   	//free(sectiondata, M_SECTION);
 	
     return sectiondata;
@@ -287,6 +364,10 @@ ret:
 
 void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_size, struct thread *td){
 
+	/////////////
+		log(LOG_INFO, "\t\t 2) ** copyMetadataToProc() ** has been called\n");
+	/////////////
+
 	/* * METADATA: proc struct metadata pointer points to returned address */
 	//*td->td_proc->p_metadata_addr = *metadata_addr;
 	td->td_proc->p_metadata_addr = metadata_addr;
@@ -296,7 +377,11 @@ void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_s
 
 	/* * METADATA: Assign metadata returned size to proc struct */
 	td->td_proc->p_metadata_size = payload_size;
-	
+
+	/////////////
+		log(LOG_INFO, "\t\t 2) ** copyMetadataToProc() ** EXIT()\n");
+	/////////////
+
 }
 
 void decodeMetadataSection(struct thread *td){
@@ -374,13 +459,15 @@ void decodeMetadataSection(struct thread *td){
 			case 1:
 			{
 				Payload_A payloadA_decod;
-				payload_functions[payload_header_decod.p_function_number](&payloadA_decod, payload_addr);
+				//payload_functions[payload_header_decod.p_function_number](&payloadA_decod, payload_addr);
+				((payload_A_func_wrapper)(payload_functions[payload_header_decod.p_function_number]))(payload_addr, &payloadA_decod);
 				break;
 			}
 			case 2:
 			{
 				Payload_B payloadB_decod;
-				payload_functions[payload_header_decod.p_function_number](&payloadB_decod, payload_addr);
+				//payload_functions[payload_header_decod.p_function_number](&payloadB_decod, payload_addr);
+				((payload_B_func_wrapper)(payload_functions[payload_header_decod.p_function_number]))(payload_addr, &payloadB_decod);
 				break;
 			}
 			default:

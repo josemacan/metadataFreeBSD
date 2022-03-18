@@ -39,7 +39,12 @@ void decodeMetadataSection(struct thread *);
 
 // ********* PAYLOAD FUNCTIONS ********* 
 
+/*
 void payload_A_func(Payload_A*, void* );
 void payload_B_func(Payload_B*, void* );
+*/
+
+void payload_A_func(void*, Payload_A* );
+void payload_B_func(void*, Payload_B* );
 
 #endif
