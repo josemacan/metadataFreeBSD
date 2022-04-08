@@ -1,7 +1,8 @@
 #ifndef METADATA_PAYLOADS_H_
 #define	METADATA_PAYLOADS_H_
 
-#define PAYLOADS_TOTAL 2 			// IMPORTANT: update this number each time you add or remove a Payload_X struct
+#define PAYLOADS_TOTAL 3 			// IMPORTANT: update this number each time you add or remove a Payload_X struct
+#define BINPAYLOAD_MAXSIZE 128
 
 typedef struct {
 	int num_a;
@@ -16,6 +17,12 @@ typedef struct {
 	char char_B2;
     size_t char_size;
 } Payload_B;
+
+typedef struct {
+	long bin_data_size; 						  // Size in bytes of the raw binary data
+	size_t charArray_bin_size;					  // Count of characters of the binary_data as string
+	char binary_data[BINPAYLOAD_MAXSIZE];         // Binary data as a string 
+} Payload_Binary;
 
 typedef struct {
 	int p_function_number;         // Function number associated to the payload                 

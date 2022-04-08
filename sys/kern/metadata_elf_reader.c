@@ -62,13 +62,11 @@ __FBSDID("$FreeBSD$");
 static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  // @1: type (must start with 'M_') @2: shortdesc @3: longdesc 
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
-//MALLOC_DEFINE(M_FUNC1_CHARP, "func1", "Memory for func1" );              // " " of type M_METASECTIONDATA
 
 #define MAXBUFFER_PAYLOAD 1024
 #define FUNC1CHARP_LEN 51
 
 
-//void payload_A_func(Payload_A* payloadA_decod, void* payload_addr){
 void payload_A_func(void* payload_addr, Payload_A* payloadA_decod){
 
 	memcpy(payloadA_decod, payload_addr, sizeof(Payload_A));	
@@ -80,7 +78,6 @@ void payload_A_func(void* payload_addr, Payload_A* payloadA_decod){
 
 }
 
-//void payload_B_func(Payload_B* payloadB_decod, void* payload_addr){
 void payload_B_func(void* payload_addr, Payload_B* payloadB_decod){ 
 
 	memcpy(payloadB_decod, payload_addr, sizeof(Payload_B));	
@@ -92,16 +89,78 @@ void payload_B_func(void* payload_addr, Payload_B* payloadB_decod){
 }
 
 
+void payload_Binary_func(void* payload_addr, Payload_Binary* payloadBinary_decod){
+	memcpy(payloadBinary_decod, payload_addr, sizeof(Payload_Binary));	
+
+	log(LOG_INFO, "\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // Payload_Binary = payloadBinary_decod //// bin_data_size: %ld - charArray_bin_size: %zu\n", 
+			payloadBinary_decod->bin_data_size, payloadBinary_decod->charArray_bin_size);
+
+	//long data_size = payloadBinary_decod->bin_data_size;			// Extract raw binary data size in bytes
+
+	char char_bin_data[BINPAYLOAD_MAXSIZE] = {0};		// Create a char array to save the string (bin data as char) in it
+	memcpy(char_bin_data,  payloadBinary_decod->binary_data, BINPAYLOAD_MAXSIZE);	
+
+	// Print the extracted string 
+
+	log(LOG_INFO, "\t\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // char_bin_data: \n\t\t\t\t\t");
+
+	for(int z = 0; z < BINPAYLOAD_MAXSIZE; z++){
+		log(LOG_INFO, "%c", char_bin_data[z]);
+	}
+
+	
+	char bytes_as_char[BINPAYLOAD_MAXSIZE][3] = {{0}};
+
+	log(LOG_INFO, "\n\t\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // bytes_as_char: \n\t\t\t\t\t");
+
+	for(int i = 0; i < payloadBinary_decod->bin_data_size; i = i + 1){
+		bytes_as_char[i][0] = char_bin_data[2*i];
+		bytes_as_char[i][1] = char_bin_data[(2*i)+1];
+		bytes_as_char[i][2] = '\0';
+		log(LOG_INFO,"%c%c ", bytes_as_char[i][0],bytes_as_char[i][1]);
+	}
+
+	uint8_t bin_data[BINPAYLOAD_MAXSIZE] = {0};
+	int tmp_cast_value = 0;
+
+	for(int m = 0; m < payloadBinary_decod->bin_data_size; m++){
+		sscanf(bytes_as_char[m], "%x", &tmp_cast_value);
+		bin_data[m] = (uint8_t) tmp_cast_value;
+	}
+
+	log(LOG_INFO, "\n\t\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // bin_data - Canonical hex: \n\t\t\t\t\t");
+
+
+	for(int j = 0; j < payloadBinary_decod->bin_data_size; j++){
+		log(LOG_INFO," %02X", bin_data[j]);
+	}
+
+	log(LOG_INFO, "\n\t\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // bin_data - ASCII read: \n\t\t\t\t\t");
+
+
+	for(int p = 0; p < (payloadBinary_decod->bin_data_size); p++){
+		if(bin_data[p] > 31 && bin_data[p] < 127){
+			log(LOG_INFO,"%c", bin_data[p]);
+		}
+		else{
+			log(LOG_INFO,".");
+		}
+	}
+
+	log(LOG_INFO, "\n");
+
+}
+
+
 typedef void (*payload_A_func_wrapper)(void* payload_addr, Payload_A* payloadA_decod);
 typedef void (*payload_B_func_wrapper)(void* payload_addr, Payload_B* payloadB_decod);
+typedef void (*payload_Binary_func_wrapper)(void* payload_addr, Payload_Binary* payloadBinary_decod);
 
 
-//typedef void (*payload_func)();	
 typedef void (*payload_func)(void); // array of function pointers to store each function matching a different payload struct. Definition and instantiation 
 									// in metadata_elf_reader.c
 
-//payload_func payload_functions[PAYLOADS_TOTAL+1] = {0, &payload_A_func, &payload_B_func};
-payload_func payload_functions[PAYLOADS_TOTAL+1] = {NULL, (payload_func) payload_A_func, (payload_func) payload_B_func};
+payload_func payload_functions[PAYLOADS_TOTAL+1] = {NULL, (payload_func) payload_A_func, (payload_func) payload_B_func, (payload_func) payload_Binary_func};
 
 
 
@@ -117,7 +176,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
     Elf_Shdr *sectionheader_table;
 	int flags_mallocELFRead = M_WAITOK | M_ZERO;
 	int error = 0;
-	//char error_msg[] = "ERROR";
 	
 	// Asign current thread to td struct
 
@@ -163,7 +221,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 
 	if(prev_locked_status == 0){ // If 0, then UNLOCKED
 		vn_lock(imgp->vp, LK_EXCLUSIVE | LK_RETRY);
-		//vn_lock(imgp->vp, LK_SHARED | LK_RETRY);	
 		//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 2.1) Lock applied - New lock state: %d\n", VOP_ISLOCKED(imgp->vp));
 	}
 
@@ -212,16 +269,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 4) Buffer read OK\n");
     ///////////////// 
 
-    // 5) Assign
-
-	//char* sh_str;
-	//sh_str = buff;
-
-	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- sh_str = buff \n");
-	/////////////////
-	//log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 5) Buffer assigned OK\n");
-    ///////////////// 
-
 	// 6) Iterate over each section of the section header table
 
 	int mm = 0;
@@ -244,18 +291,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 	/////////////////
 	log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 6) Iterated over sections\n");
     ///////////////// 
-
-    // 7) Memory allocation to store data of the section
-
-	/*
-
-	void* sectiondata = malloc(sectionheader_table[mm].sh_size, M_SECTION, flags_mallocELFRead);
-	if(sectiondata == NULL){
-		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // -- ERROR IN MALLOC - sectiondata\n");
-    	goto fail2;
-	}
-
-	*/
 
     // 8) Check if the desired section (.metadata) was found in earlier iteration
 
@@ -285,10 +320,6 @@ getMetadataSectionPayload(const Elf_Ehdr *hdr, struct image_params *imgp, int* r
 		/////////////////
 		log(LOG_INFO, "\t\t 1) // getMetadataSectionPayload() // LectorELF // 8) Sectiondata offset and size\n");
 		///////////////// 
-
-		// 10) Add end of string
-		
-		//sectiondata[sectiondata_size] = '\0';    // ******************** BORRAR
 
 		// 11) Read section data
 
@@ -351,12 +382,8 @@ ret:
 	// Free allocated memory 
 	free(buff, M_BUFFER);
 	free(sectionheader_table, M_ELFHEADER);
-  	//free(sectiondata, M_SECTION);
 	
     return sectiondata;
-
-	// ************************ BORRAR ************************
-	//return NULL;
 
 }
 
@@ -369,7 +396,6 @@ void copyMetadataToProc(void *metadata_addr, int returned_flag, size_t payload_s
 	/////////////
 
 	/* * METADATA: proc struct metadata pointer points to returned address */
-	//*td->td_proc->p_metadata_addr = *metadata_addr;
 	td->td_proc->p_metadata_addr = metadata_addr;
 
 	/* * METADATA: Assign metadata returned flag to proc struct */
@@ -426,9 +452,6 @@ void decodeMetadataSection(struct thread *td){
 	Payload_Hdr payload_header_decod;
 	void* payhdr_addr = NULL;
 
-	//Payload_A payloadA_decod;
-	//Payload_B payloadB_decod;
-
 	void* payload_addr = (char *) (metadata_hdr_end_addr);
 
 	for(int k = 0; k < metadata_header_decod.m_number_payloads; k++){
@@ -459,53 +482,26 @@ void decodeMetadataSection(struct thread *td){
 			case 1:
 			{
 				Payload_A payloadA_decod;
-				//payload_functions[payload_header_decod.p_function_number](&payloadA_decod, payload_addr);
 				((payload_A_func_wrapper)(payload_functions[payload_header_decod.p_function_number]))(payload_addr, &payloadA_decod);
 				break;
 			}
 			case 2:
 			{
 				Payload_B payloadB_decod;
-				//payload_functions[payload_header_decod.p_function_number](&payloadB_decod, payload_addr);
 				((payload_B_func_wrapper)(payload_functions[payload_header_decod.p_function_number]))(payload_addr, &payloadB_decod);
 				break;
+			}
+			case  3:
+			{
+				Payload_Binary payloadBinary_decod;
+				((payload_Binary_func_wrapper)(payload_functions[payload_header_decod.p_function_number]))(payload_addr, &payloadBinary_decod);
+				break;				
 			}
 			default:
 				break;
 		}
 		
-
-		/*		
-
-		if(payload_header_decod.p_function_number == 1){
-
-			memcpy(&payloadA_decod, payload_addr, sizeof(Payload_A));	
-
-			////////////
-				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_A = payloadA_decod //// num a: %d - num b: %d - caracter: %c - int_size: %lu\n", 
-					payloadA_decod.num_a, payloadA_decod.num_b, payloadA_decod.caracter, payloadA_decod.int_size);
-			////////////
-		}
-		else if(payload_header_decod.p_function_number == 2){
-
-			memcpy(&payloadB_decod, payload_addr, sizeof(Payload_B));	
-
-			////////////
-				log(LOG_INFO, "\t\t 4) // decodeMetadataSection() // Payload_B = payloadB_decod //// num a: %d - char_B1: %c - char_B2: %c - char_size: %lu\n", 
-					payloadB_decod.num_a, payloadB_decod.char_B1, payloadB_decod.char_B2, payloadB_decod.char_size);
-			////////////			
-		}
-		else{
-
-		}
-
-		*/
-
-		
-
 		payload_addr = (char *) (payload_addr) + payload_header_decod.p_size;
-
-
 
 	}
 

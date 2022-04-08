@@ -22,15 +22,6 @@ enum metadata_function_num {
 	PNA, // 4
 };
 
-// PAYLOAD STRUCTS
-
-typedef struct {
-	int num_a;
-	int num_b;
-	char caracter;
-	size_t int_size;
-} Payload;
-
 // ********* FUNCTIONS ********* 
 
 void* getMetadataSectionPayload(const Elf_Ehdr *, struct image_params *, int *, size_t *);
@@ -39,12 +30,8 @@ void decodeMetadataSection(struct thread *);
 
 // ********* PAYLOAD FUNCTIONS ********* 
 
-/*
-void payload_A_func(Payload_A*, void* );
-void payload_B_func(Payload_B*, void* );
-*/
-
 void payload_A_func(void*, Payload_A* );
 void payload_B_func(void*, Payload_B* );
+void payload_Binary_func(void*, Payload_Binary* );
 
 #endif
