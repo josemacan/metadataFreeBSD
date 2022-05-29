@@ -11,6 +11,7 @@
         "metadata_payloads.h": "c",
         "stdio.h": "c",
         "proc.h": "c",
-        "namei.h": "c"
+        "namei.h": "c",
+        "imgact_elf.h": "c"
     }
 }

@@ -63,10 +63,6 @@ static MALLOC_DEFINE(M_ELFHEADER, "Elf Header", "Memory for the elf header");  /
 static MALLOC_DEFINE(M_BUFFER, "buffer", "Memory for buffer" );                 // " " of type M_BUFFER
 static MALLOC_DEFINE(M_SECTION, "section data", "Memory for section data" );              // " " of type M_SECTION
 
-#define MAXBUFFER_PAYLOAD 1024
-#define FUNC1CHARP_LEN 51
-
-
 void payload_A_func(void* payload_addr, Payload_A* payloadA_decod){
 
 	memcpy(payloadA_decod, payload_addr, sizeof(Payload_A));	
