@@ -1,3 +1,33 @@
+/*-
+ * SPDX-License-Identifier: BSD-2-Clause
+ *
+ * Copyright (c) 2022 Jose Cancinos (josemacanc@gmail.com) and 
+ * 				      Julian Gonzalez (julian.agustin.gonzalez@mi.unc.edu.ar)
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * [v1]
+ */
+
 // Kernel libraries 
 
 #include <sys/cdefs.h>
@@ -86,10 +116,13 @@ void payload_B_func(void* payload_addr, Payload_B* payloadB_decod){
 
 
 void payload_Binary_func(void* payload_addr, Payload_Binary* payloadBinary_decod){
+
 	memcpy(payloadBinary_decod, payload_addr, sizeof(Payload_Binary));	
 
+	////////////
 	log(LOG_INFO, "\t\t\t4) // decodeMetadataSection() // payload_Binary_func() // Payload_Binary = payloadBinary_decod //// bin_data_size: %ld - charArray_bin_size: %zu\n", 
 			payloadBinary_decod->bin_data_size, payloadBinary_decod->charArray_bin_size);
+	////////////
 
 	//long data_size = payloadBinary_decod->bin_data_size;			// Extract raw binary data size in bytes
 
@@ -98,6 +131,7 @@ void payload_Binary_func(void* payload_addr, Payload_Binary* payloadBinary_decod
 
 	// Print the extracted string 
 	//log(LOG_INFO, "\t\t\t\t 4) // decodeMetadataSection() // payload_Binary_func() // char_bin_data: \n\t\t\t\t\t");
+	//
 	//for(int z = 0; z < BINPAYLOAD_MAXSIZE; z++){
 	//	log(LOG_INFO, "%c", char_bin_data[z]);
 	//}
@@ -116,11 +150,19 @@ void payload_Binary_func(void* payload_addr, Payload_Binary* payloadBinary_decod
 	uint8_t bin_data[BINPAYLOAD_MAXSIZE] = {0};
 	int tmp_cast_value = 0;
 
+	log(LOG_INFO, "\t\t\t4) // decodeMetadataSection() // payload_Binary_func() // bin_data - Canonical hex: \n\t\t\t");
 	for(int m = 0; m < payloadBinary_decod->bin_data_size; m++){
 		sscanf(bytes_as_char[m], "%x", &tmp_cast_value);
 		bin_data[m] = (uint8_t) tmp_cast_value;
+		//////
+		log(LOG_INFO," %02X", bin_data[m]);
+		//////		
 	}
+	//////
+	log(LOG_INFO,"\n");
+	//////
 
+	/*
 	////////////
 	log(LOG_INFO, "\t\t\t4) // decodeMetadataSection() // payload_Binary_func() // bin_data - Canonical hex: \n\t\t\t");
 	for(int j = 0; j < payloadBinary_decod->bin_data_size; j++){
@@ -140,7 +182,7 @@ void payload_Binary_func(void* payload_addr, Payload_Binary* payloadBinary_decod
 	}
 	log(LOG_INFO, "\n");
 	////////////
-
+	*/
 }
 
 
