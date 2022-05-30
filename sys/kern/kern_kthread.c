@@ -84,9 +84,6 @@ int
 kproc_create(void (*func)(void *), void *arg,
     struct proc **newpp, int flags, int pages, const char *fmt, ...)
 {
-	/////////////////
-    //log(LOG_INFO, "\nKTHREAD 1) ** kproc_create() ** has been called\n");
-    /////////////////
 
 	struct fork_req fr;
 	int error;
@@ -145,10 +142,6 @@ kproc_create(void (*func)(void *), void *arg,
 	if (!(flags & RFSTOPPED))
 		sched_add(td, SRQ_BORING); 
 	thread_unlock(td);
-
-	/////////////////
-    //log(LOG_INFO, "KTHREAD 1) ** kproc_create() ** has been called\n");
-    /////////////////
 
 	return 0;
 }

@@ -12,6 +12,7 @@
         "stdio.h": "c",
         "proc.h": "c",
         "namei.h": "c",
-        "imgact_elf.h": "c"
+        "imgact_elf.h": "c",
+        "__locale": "c"
     }
 }

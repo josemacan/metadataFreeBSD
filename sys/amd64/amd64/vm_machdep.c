@@ -159,10 +159,6 @@ cpu_fork(td1, p2, td2, flags)
 	int flags;
 {
 
-	/////////////////
-    //log(LOG_INFO, "\n\t\tVM_MACHDEP 1) ** cpu_fork() ** has been called\n");
-    /////////////////
-
 	register struct proc *p1;
 	struct pcb *pcb2;
 	struct mdproc *mdp1, *mdp2;
@@ -180,10 +176,6 @@ cpu_fork(td1, p2, td2, flags)
 				panic("could not copy LDT");
 			mtx_unlock(&dt_lock);
 		}
-
-		/////////////////
-		//log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT with RFPROC = 0 \n");
-		/////////////////
 
 		return;
 	}
@@ -290,11 +282,6 @@ cpu_fork(td1, p2, td2, flags)
 	 * will set up a stack to call fork_return(p, frame); to complete
 	 * the return to user-mode.
 	 */
-
-
-		/////////////////
-		//log(LOG_INFO, "\t\tVM_MACHDEP 1) ** cpu_fork() ** EXIT \n");
-		/////////////////
 
 }
 

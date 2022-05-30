@@ -165,17 +165,9 @@ __elfN(freebsd_trans_osrel)(const Elf_Note *note, int32_t *osrel)
 {
 	uintptr_t p;
 
-    /////////////////
-    //log(LOG_INFO, "\n\t 3) ** __elfN(freebsd_trans_osrel) ** has been called\n");
-    /////////////////
-
 	p = (uintptr_t)(note + 1);
 	p += roundup2(note->n_namesz, ELF_NOTE_ROUNDSIZE);
 	*osrel = *(const int32_t *)(p);
-
-    /////////////////
-    //log(LOG_INFO, "\t 3) ** __elfN(freebsd_trans_osrel) ** EXIT\n");
-    /////////////////
 
 	return (TRUE);
 }
@@ -272,10 +264,6 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
     int interp_name_len, int32_t *osrel)
 {
 
-	/////////////////
-	//log(LOG_INFO, "\n\t 2) ** __elfN(get_brandinfo) ** -- has been called --- Several ways of exit\n");
-	/////////////////
-
 	const Elf_Ehdr *hdr = (const Elf_Ehdr *)imgp->image_header;
 	Elf_Brandinfo *bi, *bi_m;						// calls ** __elfN(freebsd_trans_osrel) ** when creating the object
 	boolean_t ret;
@@ -296,10 +284,6 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 			continue;
 		if (hdr->e_machine == bi->machine && (bi->flags &
 		    (BI_BRAND_NOTE|BI_BRAND_NOTE_MANDATORY)) != 0) {
-
-				/////////////////
-				//log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(check_note) **\n");
-				/////////////////
 
 			ret = __elfN(check_note)(imgp, bi->brand_note, osrel);
 			/* Give brand a chance to veto check_note's guess */
@@ -377,11 +361,6 @@ __elfN(get_brandinfo)(struct image_params *imgp, const char *interp,
 		if (bi == NULL || bi->flags & BI_BRAND_NOTE_MANDATORY)
 			continue;
 		if (hdr->e_machine == bi->machine && __elfN(fallback_brand) == bi->brand){
-
-				/////////////////
-				//log(LOG_INFO, "\t 2) // __elfN(get_brandinfo) // -- call ** __elfN(fallback_brand) **\n");
-				/////////////////
-
 			return (bi);
 		}
 	}
@@ -457,10 +436,6 @@ __elfN(map_insert)(vm_map_t map, vm_object_t object, vm_ooffset_t offset,
     vm_offset_t start, vm_offset_t end, vm_prot_t prot, int cow)
 {
 
-    /////////////////
-    //log(LOG_INFO, "\n\t\t 6) ** __elfN(map_insert) ** has been called -- Several ways of exit\n");
-    /////////////////
-
 	struct sf_buf *sf;
 	vm_offset_t off;
 	vm_size_t sz;
@@ -531,12 +506,6 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
     caddr_t vmaddr, size_t memsz, size_t filsz, vm_prot_t prot,
     size_t pagesize)
 {
-
-    /////////////////
-    //log(LOG_INFO, "\n\t\t 5) ** __elfN(load_section) ** has been called\n");
-	/*log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- this section has = size in memory: %ld - size in file: %ld - virtual address in memory: %p\n",
-					 memsz, filsz, (void *) vmaddr);*/
-    /////////////////
 	
 	struct sf_buf *sf;
 	size_t map_len;
@@ -582,10 +551,6 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		cow = MAP_COPY_ON_WRITE | MAP_PREFAULT |
 		    (prot & VM_PROT_WRITE ? 0 : MAP_DISABLE_COREDUMP);
 
-		//////////////////////
-		//	log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- calling ** __elfN(map_insert) **\n");
-		//////////////////////
-
 		rv = __elfN(map_insert)(map,
 				      object,
 				      file_addr,	/* file offset */
@@ -598,11 +563,6 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 
 		/* we can stop now if we've covered it all */
 		if (memsz == filsz) {
-
-					/////////////////
-					//log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT - with memsz = filsz at first\n");
-					/////////////////
-
 			return (0);
 		}
 	}
@@ -639,10 +599,6 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 		off = trunc_page_ps(offset + filsz, pagesize) -
 		    trunc_page(offset + filsz);
 
-			/////////////////
-			//log(LOG_INFO, "\t\t 5) // __elfN(load_section) // -- send page fragment from kernel space to user space using copyout() function\n");
-			/////////////////
-
 		error = copyout((caddr_t)sf_buf_kva(sf) + off,
 		    (caddr_t)map_addr, copy_len);			// copyout() - copies (3rd arg) bytes of data from kernel space address (1st arg) to user space address (2nd arg)
 		vm_imgact_unmap_page(sf);
@@ -658,11 +614,6 @@ __elfN(load_section)(struct image_params *imgp, vm_offset_t offset,
 	 */
 	vm_map_protect(map, trunc_page(map_addr), round_page(map_addr +
 	    map_len), prot, FALSE);
-
-		
-	/////////////////
-	//log(LOG_INFO, "\t\t 5) ** __elfN(load_section) ** EXIT\n");
-	/////////////////
 
 	return (0);
 }
@@ -683,12 +634,6 @@ static int
 __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 	u_long *entry, size_t pagesize)
 {
-
-    /////////////////
-    //log(LOG_INFO, "\n\t\t 7) ** __elfN(load_file)** has been called\n");
-	//log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- Load the shared object or the executable in memory\n");
-    /////////////////
-
 	struct {
 		struct nameidata nd;
 		struct vattr attr;
@@ -767,12 +712,6 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 		goto fail;
 	}
 
-	//////////////
-	/*log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- elf_header hdr = size each entry: %u -- num entries: %u -- size total table: %u\n",
-			hdr->e_shentsize, hdr->e_shnum, ((hdr->e_shentsize)*(hdr->e_shnum)) );
-	*/
-	/////////////
-
 	/* Only support headers that fit within first page for now      */
 	if ((hdr->e_phoff > PAGE_SIZE) ||
 	    (u_int)hdr->e_phentsize * hdr->e_phnum > PAGE_SIZE - hdr->e_phoff) {
@@ -789,12 +728,6 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 	for (i = 0, numsegs = 0; i < hdr->e_phnum; i++) {
 		if (phdr[i].p_type == PT_LOAD && phdr[i].p_memsz != 0) {
 			/* Loadable segment */
-
-				//////////////
-				/*log(LOG_INFO, "\t\t 7) // __elfN(load_file) // ---- Loading a loadable segment -- segment number: %d -- type: %d\n",
-						i, phdr[i].p_type );*/
-				/////////////
-
 			prot = __elfN(trans_prot)(phdr[i].p_flags);
 			error = __elfN(load_section)(imgp, phdr[i].p_offset,
 			    (caddr_t)(uintptr_t)phdr[i].p_vaddr + rbase,
@@ -814,10 +747,6 @@ __elfN(load_file)(struct proc *p, const char *file, u_long *addr,
 	*addr = base_addr;
 	*entry = (unsigned long)hdr->e_entry + rbase;
 
-	//////////////
-	//log(LOG_INFO, "\t\t 7) // __elfN(load_file) // -- addr where file is loaded : %p -- entry point for loaded file: %p\n", (void *) addr, (void *) entry );
-	/////////////
-
 fail:
 	if (imgp->firstpage)
 		exec_unmap_first_page(imgp);
@@ -827,23 +756,12 @@ fail:
 
 	free(tempdata, M_TEMP);
 
-	//////////////
-	//log(LOG_INFO, "\t\t 7) ** __elfN(load_file) ** -- EXIT function\n");
-	/////////////
-
-
 	return (error);
 }
 
 static int
 __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 {
-
-    /////////////////
-    log(LOG_INFO, "\n\t 1) ** __CONCAT(exec_, __elfN(imgact)) ** has been called\n");
-	//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // thread struct size: %lu - proc struct size: %lu\n", sizeof(struct thread), sizeof(struct proc));
-	//log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // PRE p_metadata_section_flag: %d\n", curthread->td_proc->p_metadata_section_flag);
-	////////////////
 
 	struct thread *td;
 	const Elf_Ehdr *hdr;
@@ -862,7 +780,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	hdr = (const Elf_Ehdr *)imgp->image_header;
 
-		/*
+	 /*
 	 * Do we have a valid ELF header ?
 	 *
 	 * Only allow ET_EXEC & ET_DYN here, reject ET_DYN later
@@ -872,7 +790,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	    (hdr->e_type != ET_EXEC && hdr->e_type != ET_DYN))
 		return (-1);
 
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 	/* 1) Call getMetadataSectionPayload() function and print metadata
 		Iterate over ELF executable file of the process. 
@@ -887,21 +804,15 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	int returned_flag = 0;
 	size_t payload_size = 0;
 	void* ELFmetadata = getMetadataSectionPayload(hdr, imgp, &returned_flag, &payload_size);
-		//////////////
-		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** METADATA: %p -- PAYLOAD SIZE: %lu -- RETURNED FLAG: %d ***\n", ELFmetadata, payload_size , returned_flag);
-		//////////////
+	//////////////
+	log(LOG_INFO, "\t1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- *** METADATA: %p -- PAYLOAD SIZE: %lu -- RETURNED FLAG: %d ***\n", ELFmetadata, payload_size , returned_flag);
+	//////////////
 	if(ELFmetadata == NULL && returned_flag == -1){
 		//////////////
-		log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getMetadataSectionPayload()\n");
+		log(LOG_INFO, "\t1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- ERROR getMetadataSectionPayload()\n");
 		//////////////
 		return (ENOEXEC);
 	}
-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-	
-
-
-
 
 	/*
 	 * From here on down, we return an errno, not -1, as we've
@@ -931,45 +842,20 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	td = curthread;
 
 	/************************************************************/
-	/************************************************************/
-	/************************************************************/
  	/* * METADATA: Assign metadata returned flag to proc struct */
 
 	td->td_proc->p_metadata_section_flag = returned_flag;
 
-	
 	if(returned_flag == 1){
-
 		/* COPY ADDRESS OF THE ALLOCATED SPACE CONTAINING THE METADATA, THE RETURNED FLAG OF ITS SEARCH AND THE SIZE OF THE METADATA SECTION 
 		TO THE PROC STRUCT ASSOCIATED TO THE ACTUAL THREAD*/
-
 		copyMetadataToProc(ELFmetadata, returned_flag, payload_size, td);
-
-			//////////////
-				log(LOG_INFO, "\t 1) // __CONCAT(exec_, __elfN(imgact)) // LectorELF // -- STRUCT PROC -- POST ASSIGNMENT -- p_metadata_addr: %p / p_metadata_size: %lu\n", td->td_proc->p_metadata_addr, td->td_proc->p_metadata_size);
-			//////////////
 	
 		/* DECODE THE METADATA SENT IN ELF AND PRINT THE VALUES OF THE PAYLOAD STRUCT MEMBERS*/
-
-		
 		decodeMetadataSection(td);
-		
-
 	}
-    
-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-	//// *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		////////////
-		log(LOG_INFO, "\t 1) // __CONCAT() // -- iterate and check program headers\n");
-		////////////
 
 	for (i = 0; i < hdr->e_phnum; i++) {
-
-		/////////////////
-		//log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
-		/////////////////
-
 		switch (phdr[i].p_type) {
 		case PT_LOAD:
 			if (n == 0)
@@ -1009,9 +895,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 				interp = __DECONST(char *, imgp->image_header) +
 				    phdr[i].p_offset;
 			}
-					/////////////////
-					//log(LOG_INFO, "\t 1) // __CONCAT() // -------- interp name: %s\n",interp);
-					/////////////////
 			break;
 		case PT_GNU_STACK:
 			if (__elfN(nxstack))
@@ -1021,11 +904,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			break;
 		}
 	}
-	/////// Detect ELF binary type
-
-    /////////////////
-    //log(LOG_INFO, "\t 1) // __CONCAT() // -- detect ELF binary type, calling ** __elfN(get_brandinfo) **\n");
-    /////////////////
 
 	brand_info = __elfN(get_brandinfo)(imgp, interp, interp_name_len,		
 	    &osrel);
@@ -1073,39 +951,16 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	vn_lock(imgp->vp, LK_EXCLUSIVE | LK_RETRY);
 	if (error != 0)
-		goto ret;
-
-	/////////////////
-	//	log(LOG_INFO, "\t 1) // __CONCAT() // -- Again, iterate over program headers\n");
-	/////////////////			
+		goto ret;		
 
 	for (i = 0; i < hdr->e_phnum; i++) {
-			/////////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT() // ---- program header num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
-			/////////////////
-
 		switch (phdr[i].p_type) {
 		case PT_LOAD:	/* Loadable segment */
-
-			/////////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT() // ---- operations over PT LOAD segment - num: %d -- type (p_type): %u\n", i, phdr[i].p_type);
-			/////////////////
-
 			if (phdr[i].p_memsz == 0)
 				break;
 
-			
-			/////////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(trans_prot) ** \n");
-			/////////////////
-
 			prot = __elfN(trans_prot)(phdr[i].p_flags);
-
-			/////////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ PT LOAD segment -- call ** __elfN(load_section)\n");
-			//log(LOG_INFO, "\t 1) // __CONCAT() // -------- Loading phdr segment num: %d -- type (p_type): %u\n", i, phdr[i].p_type);		
-			/////////////////
-
+			
 			error = __elfN(load_section)(imgp, phdr[i].p_offset,
 			    (caddr_t)(uintptr_t)phdr[i].p_vaddr + et_dyn_addr,
 			    phdr[i].p_memsz, phdr[i].p_filesz, prot,
@@ -1122,22 +977,14 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			if (phdr[i].p_offset == 0 &&
 			    hdr->e_phoff + hdr->e_phnum * hdr->e_phentsize
 				<= phdr[i].p_filesz){
-
-					proghdr = phdr[i].p_vaddr + hdr->e_phoff +
-						et_dyn_addr;
-					/////////////////
-					//log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d segment contains the program headers\n", i);
-					/////////////////
 					
+					proghdr = phdr[i].p_vaddr + hdr->e_phoff +
+						et_dyn_addr;	
 				}
 
 			seg_addr = trunc_page(phdr[i].p_vaddr + et_dyn_addr);
 			seg_size = round_page(phdr[i].p_memsz +
 			    phdr[i].p_vaddr + et_dyn_addr - seg_addr);
-
-					/////////////////
-					//log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr segment num: %d = seg_addr: 0x%lx -- seg_size: %lu \n", i, seg_addr, seg_size);
-					/////////////////
 
 			/*
 			 * Make the largest executable segment the official
@@ -1158,12 +1005,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 				data_addr = seg_addr;
 			}
 			total_size += seg_size;
-
-					/////////////////
-					/*log(LOG_INFO, "\t 1) // __CONCAT() // ------ phdr[%d] = text_size: %lu -- text_addr: 0x%lx -- data_size: %lu -- data_addr: 0x%lx -- total_size: %lu \n", 
-									i, text_size, text_addr, data_size, data_addr, total_size); */
-					/////////////////
-			
 			break;
 		case PT_PHDR: 	/* Program header table info */
 			proghdr = phdr[i].p_vaddr + et_dyn_addr;
@@ -1179,9 +1020,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	}
 
 	entry = (u_long)hdr->e_entry + et_dyn_addr;
-		/////////////////
-		//log(LOG_INFO, "\t 1) // __CONCAT() // --- entry point: 0x%lx \n", entry);
-		/////////////////
 
 	/*
 	 * Check limits.  It should be safe to check the
@@ -1212,12 +1050,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 	vmspace->vm_dsize = data_size >> PAGE_SHIFT;			///// data size in pages	
 	vmspace->vm_daddr = (caddr_t)(uintptr_t)data_addr;		///// user virtual address of data
 
-		/////////////////
-		/*log(LOG_INFO, "\t 1) // __CONCAT() // --- vmspace: text size (vm_tsize): %ld - user virtual address of text (vm_taddr): %p - \n data size (vm_dsize): %ld - user virtual address of data (vm_daddr): %p\n", 
-				vmspace->vm_tsize, (void*) vmspace->vm_taddr, vmspace->vm_dsize, (void*) vmspace->vm_daddr); */
-		/////////////////
-	
-
 	/*
 	 * We load the dynamic linker where a userland call
 	 * to mmap(0, ...) would put it.  The rationale behind this
@@ -1232,10 +1064,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
 	if (interp != NULL) {
 
-		/////////////////
-		//log(LOG_INFO, "\t 1) // __CONCAT() // ------ interp NOT null \n");
-		/////////////////
-
 		have_interp = FALSE;
 		VOP_UNLOCK(imgp->vp, 0);
 		if (brand_info->emul_path != NULL &&
@@ -1243,11 +1071,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 			path = malloc(MAXPATHLEN, M_TEMP, M_WAITOK);
 			snprintf(path, MAXPATHLEN, "%s%s",
 			    brand_info->emul_path, interp);
-
-						/////////////////
-						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->emul_path - path: %s \n", path);
-						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
-						/////////////////
 
 			error = __elfN(load_file)(imgp->proc, path, &addr,
 			    &imgp->entry_addr, sv->sv_pagesize);
@@ -1258,22 +1081,12 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		if (!have_interp && newinterp != NULL &&
 		    (brand_info->interp_path == NULL ||
 		    strcmp(interp, brand_info->interp_path) == 0)) {
-
-
-						/////////////////
-						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- brand_info->interp_path - new interp: %s \n", newinterp);
-						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- call ** __elfN(load_file) **\n");
-						/////////////////
-
 			error = __elfN(load_file)(imgp->proc, newinterp, &addr,
 			    &imgp->entry_addr, sv->sv_pagesize);
 			if (error == 0)
 				have_interp = TRUE;
 		}
 		if (!have_interp) {
-						/////////////////
-						//log(LOG_INFO, "\t 1) // __CONCAT() // --------- have interp - interp: %s \n", interp);
-						/////////////////
 			error = __elfN(load_file)(imgp->proc, interp, &addr,
 			    &imgp->entry_addr, sv->sv_pagesize);
 		}
@@ -1285,17 +1098,7 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 		}
 	} else{
 		addr = et_dyn_addr;
-
-			/////////////////
-			//log(LOG_INFO, "\t 1) // __CONCAT() // ------ NO interp \n");
-			/////////////////
-
 	}
-
-		/////////////////
-		//log(LOG_INFO, "\t 1) // __CONCAT() // -- addr: 0x%lx  - imgp->entry_addr: 0x%lx\n", addr, imgp->entry_addr);
-		/////////////////
-		
 
 	/*
 	 * Construct auxargs table (used by the fixup routine)
@@ -1318,10 +1121,6 @@ __CONCAT(exec_, __elfN(imgact))(struct image_params *imgp)
 
  ret:
 	free(interp_buf, M_TEMP);
-
-    /////////////////
-    log(LOG_INFO, "\n\t 1) **__CONCAT(exec_, __elfN(imgact))** EXIT\n");
-    /////////////////
 
 	return (error);
 }

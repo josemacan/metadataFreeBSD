@@ -342,23 +342,10 @@ void
 runq_add(struct runq *rq, struct thread *td, int flags)
 {
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\t\t KERN_SWITCH 1) ** runq_add() ** has been called - Several ways of exit\n");
-	}
-    /////////////////
-
 	struct rqhead *rqh;
 	int pri;
 
 	pri = td->td_priority / RQ_PPQ;
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-		log(LOG_INFO, "\n\t\t KERN_SWITCH 1) // runq_add() -- pri: %d // \n", pri);	
-	}	
-	/////////////////
-
 
 	td->td_rqindex = pri;
 	runq_setbit(rq, pri);
@@ -370,12 +357,6 @@ runq_add(struct runq *rq, struct thread *td, int flags)
 	} else {
 		TAILQ_INSERT_TAIL(rqh, td, td_runq);
 	}
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\t\t KERN_SWITCH 1) ** runq_add() ** EXIT\n");
-	}
-    /////////////////
 
 }
 

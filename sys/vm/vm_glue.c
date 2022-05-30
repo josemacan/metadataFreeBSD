@@ -626,10 +626,6 @@ vm_forkproc(td, p2, td2, vm2, flags)
 	int flags;
 {
 
-	/////////////////
-    //log(LOG_INFO, "\n\tVM_GLUE 1) ** vm_forkproc() ** has been called\n");
-    /////////////////
-
 	struct proc *p1 = td->td_proc;
 	int error;
 
@@ -665,19 +661,11 @@ vm_forkproc(td, p2, td2, vm2, flags)
 			shmfork(p1, p2);
 	}
 
-	/////////////////
-    //log(LOG_INFO, "\tVM_GLUE 1) // vm_forkproc() // call ** cpu_fork() ** -- copy and update the pcb, set up kern stack and make the child ready to run\n");
-	/////////////////
-
 	/*
 	 * cpu_fork will copy and update the pcb, set up the kernel stack,
 	 * and make the child ready to run.
 	 */
 	cpu_fork(td, p2, td2, flags);
-
-	/////////////////
-    //log(LOG_INFO, "\tVM_GLUE 1) ** vm_forkproc() ** EXIT\n");
-    /////////////////
 
 	return (0);
 }

@@ -218,8 +218,7 @@ sys_execve(struct thread *td, struct execve_args *uap)
 	int error;
 
 	/////////////////
-	log(LOG_INFO, "\n****************** NEW EXECVE CALL ******************\n");
-    log(LOG_INFO, "\n1) ** sys_execve() ** has been called for: %s\n", uap->fname);
+    log(LOG_INFO, "\n1) ** NEW EXECVE CALL ** sys_execve() ** has been called for: %s\n", uap->fname);
     /////////////////
 
 	error = pre_execve(td, &oldvmspace);
@@ -232,29 +231,20 @@ sys_execve(struct thread *td, struct execve_args *uap)
 	post_execve(td, error, oldvmspace);
 
 	/////////////////
-    log(LOG_INFO, "\n1) ** sys_execve() ** EXIT\n");
 
+	log(LOG_INFO, "1) ** ENDING OF EXECVE CALL ** sys_execve() EXIT ** // sys_execve() // THREAD NAME: ");
+	for(int ll = 0; ll < MAXCOMLEN; ll++){
+		log(LOG_INFO, "%c", (td->td_name)[ll]);
+	}
 
-			/////////////////
-			log(LOG_INFO, "1)  // sys_execve() // THREAD NAME: ");
-			for(int ll = 0; ll < MAXCOMLEN; ll++){
-				log(LOG_INFO, "%c", (td->td_name)[ll]);
-				}
-			log(LOG_INFO, "\n");
+	log(LOG_INFO, " - ASSOCIATED PROCESS NAME: ");	
+	for(int jj = 0; jj < MAXCOMLEN; jj++){
+		log(LOG_INFO, "%c", (td->td_proc->p_comm)[jj]);
+	}
+	log(LOG_INFO, "\n");
 
-			log(LOG_INFO, "1)  // sys_execve() //  associated proc to thread - PROCESS NAME: ");
-			for(int jj = 0; jj < MAXCOMLEN; jj++){
-				log(LOG_INFO, "%c", (td->td_proc->p_comm)[jj]);
-				}
-			log(LOG_INFO, "\n");
-
-			/////////////////
-
-
-	log(LOG_INFO, "\n****************** ENDING OF EXECVE CALL ******************\n");
-
-    /////////////////
-
+	/////////////////
+	
 	return (error);
 }
 
@@ -323,11 +313,6 @@ pre_execve(struct thread *td, struct vmspace **oldvmspace)
 	struct proc *p;
 	int error;
 
-    /////////////////
-    //log(LOG_INFO, "\n2) ** pre_execve() ** has been called\n");
-    /////////////////
-
-
 	KASSERT(td == curthread, ("non-current thread %p", td));
 	error = 0;
 	p = td->td_proc;
@@ -341,10 +326,6 @@ pre_execve(struct thread *td, struct vmspace **oldvmspace)
 	    ("nested execve"));
 	*oldvmspace = p->p_vmspace;
 
-	/////////////////
-    //log(LOG_INFO, "\n2) ** pre_execve() ** EXIT\n");
-    /////////////////
-
 	return (error);
 }
 
@@ -352,10 +333,6 @@ void
 post_execve(struct thread *td, int error, struct vmspace *oldvmspace)
 {
 	struct proc *p;
-
-	/////////////////
-    //log(LOG_INFO, "\n7) ** post_execve() ** has been called\n");
-    /////////////////
 
 	KASSERT(td == curthread, ("non-current thread %p", td));
 	p = td->td_proc;
@@ -377,10 +354,6 @@ post_execve(struct thread *td, int error, struct vmspace *oldvmspace)
 		vmspace_free(oldvmspace);
 		td->td_pflags &= ~TDP_EXECVMSPC;
 	}
-
-	/////////////////
-	//    log(LOG_INFO, "\n7) ** post_execve() ** EXIT\n");
-	/////////////////
 }
 
 /*
@@ -393,31 +366,6 @@ post_execve(struct thread *td, int error, struct vmspace *oldvmspace)
 int
 kern_execve(struct thread *td, struct image_args *args, struct mac *mac_p)
 {
-
-	/////////////
-	//	log(LOG_INFO, "\n4) ** kern_execve() ** has been called\n");
-
-	/*	log(LOG_INFO, "4) // kern_execve() // - begin_argv: %s - # argc: %d - # len: %d \n", 
-				args->begin_argv, args->argc, (int) (args->begin_envv - args->begin_argv) );
-
-		//void *pointer;
-		char *pointer;
-		pointer = malloc((int) (args->begin_envv - args->begin_argv), M_AUDITTEXT_ARGS, M_WAITOK);
-		bcopy(args->begin_argv, pointer, (int) (args->begin_envv - args->begin_argv));
-
-		log(LOG_INFO, "4) // kern_execve() // char pointer argv: %s \n", pointer );
-		
-		int ii = 0;
-		
-		log(LOG_INFO, "4) // kern_execve() // image_args -- argv: ");
-		for(ii = 0; ii < (int) (args->begin_envv - args->begin_argv); ii++){
-			log(LOG_INFO, "%c", pointer[ii]);
-		}
-		log(LOG_INFO, "\n");
-	*/
-	//////////////
-
-
 	AUDIT_ARG_ARGV(args->begin_argv, args->argc,
 	    args->begin_envv - args->begin_argv);
 	AUDIT_ARG_ENVV(args->begin_envv, args->envc,
@@ -435,29 +383,6 @@ do_execve(td, args, mac_p)
 	struct image_args *args;
 	struct mac *mac_p;
 {
-
-	//
-		log(LOG_INFO, "\n5) ** do_execve() ** has been called\n");
-
-		log(LOG_INFO, "5) // do_execve() // fname: %s - # args: %d - # env: %d - # fd: %d \n", args->fname, 
-			args->argc, args->envc, args->fd);
-
-		/*log(LOG_INFO, "do_execve() - image_args // buf: %s - begin_argv: %s - begin_envv: %s - # endp: %s \n", args->buf, 
-			args->begin_argv, args->begin_envv, args->endp);
-
-		log(LOG_INFO, "do_execve() - strlen image_args // strlen buf: %zu - strlen begin_argv: %zu - strlen begin_envv: %zu - # strlen endp: %zu \n", strlen(args->buf), 
-			strlen(args->begin_argv), strlen(args->begin_envv), strlen(args->endp) );
-
-		log(LOG_INFO, "do_execve() - args full len // begin_argv: %d - begin_envv: %d - TOTAL b_argv - b_envv: %d \n", 
-			(int) args->begin_envv, (int) args->begin_argv, (int) (args->begin_envv - args->begin_argv));
-
-		log(LOG_INFO, "do_execve() - args addr // begin_argv: %p - begin_envv: %p \n", 
-			&(args->begin_envv), &(args->begin_argv) );
-
-		*/
-
-	//
-
 	struct proc *p = td->td_proc;	// copio estructura del proceso asociado al hilo td
 	struct nameidata nd;			// para guardar parametros del directorio donde esta el archivo
 	struct ucred *oldcred;			// backup de credenciales
@@ -691,16 +616,8 @@ interpret:
 	 */
 	error = -1;
 	if ((img_first = imgp->proc->p_sysent->sv_imgact_try) != NULL){
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - process contains a special image activator\n");
-		////////////////
 		error = img_first(imgp);
 	}
-	////////////////
-	else{
-		//log(LOG_INFO, "5) // do_execve() // - process DOESNT contain a special image activator\n");
-	}
-	////////////////	
 
 	/*
 	 *	Loop through the list of image activators, calling each one.
@@ -708,15 +625,7 @@ interpret:
 	 *	and an error otherwise.
 	 */
 
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - iterate through list of image activators and call each one.\n");	
-		////////////////
-
 	for (i = 0; error == -1 && execsw[i]; ++i) {		// execsw = estructura que contiene cada activador de imagen.
-		////////////
-		//log(LOG_INFO, "5) // do_execve() // - image activator name (ex_ecsw name): %s\n", execsw[i]->ex_name);
-		////////////
-
 		if (execsw[i]->ex_imgact == NULL ||
 		    execsw[i]->ex_imgact == img_first) {
 			continue;
@@ -724,17 +633,8 @@ interpret:
 		error = (*execsw[i]->ex_imgact)(imgp);			// CALL THE IMAGE ACTIVATOR
 	}
 
-	////////////////
-	//log(LOG_INFO, "5) // do_execve() // - error value after image activator loop: %d\n", error);
-	////////////////
-
 	if (error) {
 		if (error == -1) {
-
-			////////////
-			//log(LOG_INFO, "5) // do_execve() - no match with image activators\n");
-			////////////
-
 			if (textset == 0)
 				VOP_UNSET_TEXT(imgp->vp);
 			error = ENOEXEC;
@@ -747,16 +647,7 @@ interpret:
 	 * activate the interpreter.
 	 */
 
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - Interpreted? value = %u\n", imgp->interpreted);
-		////////////////
-
 	if (imgp->interpreted) {
-
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - process is interpreted\n");
-		////////////////
-
 		exec_unmap_first_page(imgp);		// libero buffers
 		/*
 		 * VV_TEXT needs to be unset for scripts.  There is a short
@@ -790,11 +681,6 @@ interpret:
 		NDINIT(&nd, LOOKUP, LOCKLEAF | FOLLOW | SAVENAME,
 		    UIO_SYSSPACE, imgp->interpreter_name, td);
 		args->fname = imgp->interpreter_name;
-
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - jump to interpret label - interpreter name: %s\n", imgp->interpreter_name);
-		////////////////
-
 		goto interpret;			// Salto a rutina de interprete
 	}
 
@@ -824,12 +710,6 @@ interpret:
 		stack_base = (*p->p_sysent->sv_copyout_strings)(imgp);			// Copio strings 
 	else
 		stack_base = exec_copyout_strings(imgp);						// Copio los strings al espacio de direcciones del nuevo proceso. Retorno puntero a usar como base del stack pointer
-
-		////////////////
-		//log(LOG_INFO, "5) // do_execve() // - stack_base: %p\n", stack_base);
-		////////////////
-
-
 	/*
 	 * If custom stack fixup routine present for this process
 	 * let it do the stack setup.
@@ -900,16 +780,6 @@ interpret:
 #ifdef KTR
 	sched_clear_tdname(td);
 #endif
-
-////////////////
-log(LOG_INFO, "5) // do_execve() // Print process name: ");
-for(int jj = 0; jj < MAXCOMLEN; jj++){
-	log(LOG_INFO, "%c", (p->p_comm)[jj]);
-	}
-log(LOG_INFO, "\n");
-////////////////
-
-
 	/*
 	 * mark as execed, wakeup the process that vforked (if any) and tell
 	 * it that it now has its own resources back
@@ -1044,10 +914,6 @@ log(LOG_INFO, "\n");
 
 	SDT_PROBE1(proc, , , exec__success, args->fname);		// ******* FIN DE FUNCION - SUCCESS *******
 
-	/////////////////////////////
-	//log(LOG_INFO, "5) ** do_execve() ** EXIT on success\n");
-	/////////////////////////////
-
 exec_fail_dealloc:													// Rutina a ejecutar al provocarse error para deallocar memoria solicitada
 	if (imgp->firstpage != NULL)
 		exec_unmap_first_page(imgp);
@@ -1133,11 +999,6 @@ int
 exec_map_first_page(imgp)
 	struct image_params *imgp;
 {
-
-	/////////////////
-    //log(LOG_INFO, "\n6) ** exec_map_first_page() ** has been called\n");
-	/////////////////
-
 	int rv, i, after, initial_pagein;
 	vm_page_t ma[VM_INITIAL_PAGEIN];
 	vm_object_t object;
@@ -1204,10 +1065,6 @@ exec_map_first_page(imgp)
 	imgp->firstpage = sf_buf_alloc(ma[0], 0);
 	imgp->image_header = (char *)sf_buf_kva(imgp->firstpage);
 
-	/////////////////
-    //log(LOG_INFO, "6) ** exec_map_first_page() ** EXIT\n");
-	/////////////////
-
 	return (0);
 }
 
@@ -1237,12 +1094,6 @@ exec_new_vmspace(imgp, sv)
 	struct image_params *imgp;
 	struct sysentvec *sv;
 {
-
-		/////////////////
-		//log(LOG_INFO, "\n\t 4) ** exec_new_vmspace() ** has been called\n");
-		//log(LOG_INFO, "\t 4) // exec_new_vmspace() // - interpreter name: %s\n", imgp->interpreter_name);
-		/////////////////
-	
 	int error;
 	struct proc *p = imgp->proc;
 	struct vmspace *vmspace = p->p_vmspace;
@@ -1328,10 +1179,6 @@ exec_new_vmspace(imgp, sv)
 	vmspace->vm_ssize = sgrowsiz >> PAGE_SHIFT;
 	vmspace->vm_maxsaddr = (char *)stack_addr;
 
-	/////////////////
-	//	log(LOG_INFO, "\t 4) ** exec_new_vmspace() ** EXIT \n");
-	/////////////////
-
 	return (0);
 }
 
@@ -1346,10 +1193,6 @@ exec_copyin_args(struct image_args *args, char *fname,
 	u_long argp, envp;
 	int error;
 	size_t length;
-
-	/////////////////
-    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** has been called for: %s\n", fname);
-    /////////////////
 
 	bzero(args, sizeof(*args));
 	if (argv == NULL)
@@ -1430,18 +1273,10 @@ exec_copyin_args(struct image_args *args, char *fname,
 		}
 	}
 
-	/////////////////
-    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT sucess\n");
-    /////////////////
-
 	return (0);
 
 err_exit:
 	exec_free_args(args);
-
-	/////////////////
-    //log(LOG_INFO, "\n3) ** exec_copyin_args() ** EXIT with error\n");
-    /////////////////
 
 	return (error);
 }
@@ -1560,10 +1395,6 @@ exec_copyout_strings(imgp)
 	size_t execpath_len;
 	int szsigcode, szps;
 	char canary[sizeof(long) * 8];
-
-	////////////
-	//log(LOG_INFO, "\n6) ** exec_copyout_strings() ** has been called\n");
-	////////////
 
 	szps = sizeof(pagesizes[0]) * MAXPAGESIZES;
 	/*
@@ -1698,14 +1529,6 @@ exec_copyout_strings(imgp)
 
 	/* end of vector table is a null pointer */
 	suword(vectp, 0);
-
-	////////////
-	//log(LOG_INFO, "6) // exec_copyout_strings // - return stack base: value pointed: %ld - address pointed: %p\n", *stack_base, stack_base);
-	////////////
-
-	////////////
-	//log(LOG_INFO, "6) ** exec_copyout_strings ** EXIT\n");
-	////////////
 
 	return (stack_base);
 }

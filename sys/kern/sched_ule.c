@@ -466,12 +466,6 @@ tdq_runq_add(struct tdq *tdq, struct thread *td, int flags)
 	TDQ_LOCK_ASSERT(tdq, MA_OWNED);
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 6) ** tdq_runq_add() ** has been called - Several ways of exit\n");
-	}
-    /////////////////
-
 	pri = td->td_priority;
 	ts = td_get_sched(td);
 	TD_SET_RUNQ(td);
@@ -544,11 +538,6 @@ static void
 tdq_load_add(struct tdq *tdq, struct thread *td)
 {
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 7) ** tdq_load_add() ** has been called\n");
-	}
-    /////////////////
 
 	TDQ_LOCK_ASSERT(tdq, MA_OWNED);
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
@@ -558,12 +547,6 @@ tdq_load_add(struct tdq *tdq, struct thread *td)
 		tdq->tdq_sysload++;
 	KTR_COUNTER0(KTR_SCHED, "load", tdq->tdq_loadname, tdq->tdq_load);
 	SDT_PROBE2(sched, , , load__change, (int)TDQ_ID(tdq), tdq->tdq_load);
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 7) ** tdq_load_add() ** EXIT\n");
-	}
-    /////////////////
 
 }
 
@@ -1535,11 +1518,7 @@ sched_interact_score(struct thread *td)
 static void
 sched_priority(struct thread *td)
 {
-    /////////////////
-		if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    		log(LOG_INFO, "\n\tSCHED_ULE 4) ** sched_priority() ** has been called\n");
-		}
-	/////////////////
+
 
 	int score;
 	int pri;
@@ -1584,15 +1563,7 @@ sched_priority(struct thread *td)
 	
 	sched_user_prio(td, pri);
 
-    /////////////////
-		if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-			//log(LOG_INFO, "\tSCHED_ULE 4) // sched_priority() // scheduling priority of the thread is: %d\n", pri);
-			//log(LOG_INFO, "\tSCHED_ULE 4) // sched_priority() // user sched priority of the thread is: %u\n", td->td_user_pri);
-			//log(LOG_INFO, "\tSCHED_ULE 4) ** sched_priority() ** has been called\n");
 
-			log(LOG_INFO, "\tSCHED_ULE 4) ** sched_priority() ** EXIT\n");
-		}
-    /////////////////
 
 	return;
 }
@@ -1817,12 +1788,7 @@ void
 sched_prio(struct thread *td, u_char prio)
 {
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE -) ** sched_prio() ** has been called    -- Several ways of exit\n");
-		log(LOG_INFO, "\n\tSCHED_ULE -) // sched_prio() // -- current thread: %s\n", sched_tdname(td));
-	}
-    /////////////////
+
 
 	u_char oldprio;
 
@@ -1848,11 +1814,7 @@ sched_prio(struct thread *td, u_char prio)
 		turnstile_adjust(td, oldprio);
 
 	
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE -) ** sched_prio() ** EXIT: %s\n", sched_tdname(td));
-	}
-    /////////////////	
+	
 }
 
 /*
@@ -1861,11 +1823,6 @@ sched_prio(struct thread *td, u_char prio)
 void
 sched_user_prio(struct thread *td, u_char prio)
 {
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 6) ** sched_user_prio() ** has been called - two ways of exiting\n");
-	}
 
 	td->td_base_user_pri = prio;
 	if (td->td_lend_user_pri <= prio)
@@ -1952,24 +1909,6 @@ sched_switch(struct thread *td, struct thread *newtd, int flags)
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 	KASSERT(newtd == NULL, ("sched_switch: Unsupported newtd argument"));
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 8) ** sched_switch() ** has been called\n");
-		log(LOG_INFO, "\n\tSCHED_ULE 8) // sched_switch() // -- current thread: %s\n", sched_tdname(td));
-	}
-    /////////////////
-
-
-
-	/////////////////
-	/*
-	if(strncmp("macrosCommentCLANG", sched_tdname(newtd),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 8) ** sched_switch() ** has been called -- for newtd\n");
-		log(LOG_INFO, "\n\tSCHED_ULE 8) // sched_switch() // -- new thread: %s\n",sched_tdname(newtd));
-	}
-	*/
-    /////////////////
-
 	cpuid = PCPU_GET(cpuid);
 	tdq = TDQ_CPU(cpuid);
 	ts = td_get_sched(td);
@@ -2021,24 +1960,6 @@ sched_switch(struct thread *td, struct thread *newtd, int flags)
 	 */
 	TDQ_LOCK_ASSERT(tdq, MA_OWNED | MA_NOTRECURSED);
 	newtd = choosethread();
-
-	////////////////////////////
-	if((strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0) || 
-		(strncmp("macrosCommentCLANG", sched_tdname(newtd),sizeof("macrosCommentCLANG"))==0) ){
-
-			log(LOG_INFO, "\n\tSCHED_ULE 8) // sched_switch() // -- process name of current thread after ** choosethread() **: ");
-			for(int mm = 0; mm < MAXCOMLEN; mm++){
-					log(LOG_INFO, "%c", (td->td_proc->p_comm)[mm]);
-				}
-			log(LOG_INFO, "\n");
-
-			log(LOG_INFO, "\n\tSCHED_ULE 8) // sched_switch() // -- process name of new thread after ** choosethread() **: ");
-			for(int jj = 0; jj < MAXCOMLEN; jj++){
-					log(LOG_INFO, "%c", (newtd->td_proc->p_comm)[jj]);
-				}
-			log(LOG_INFO, "\n");
-	}
-	///////////////////////////
 
 	/*
 	 * Call the MD code to switch contexts if necessary.
@@ -2119,13 +2040,6 @@ sched_sleep(struct thread *td, int prio)
 
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE -) ** sched_sleep() ** has been called    -- Several ways of exit\n");
-		log(LOG_INFO, "\n\tSCHED_ULE -) // sched_sleep() // -- current thread: %s\n", sched_tdname(td));
-	}
-    /////////////////
-
 	td->td_slptick = ticks;
 	if (TD_IS_SUSPENDED(td) || prio >= PSOCK)
 		td->td_flags |= TDF_CANSWAP;
@@ -2149,14 +2063,6 @@ sched_wakeup(struct thread *td)
 
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE -) ** sched_wakeup() ** has been called    -- Several ways of exit\n");
-		log(LOG_INFO, "\n\tSCHED_ULE -) // sched_wakeup() // -- current thread: %s\n", sched_tdname(td));
-	}
-    /////////////////
-
-
 	ts = td_get_sched(td);
 	td->td_flags &= ~TDF_CANSWAP;
 	/*
@@ -2176,13 +2082,6 @@ sched_wakeup(struct thread *td)
 	ts->ts_slice = 0;
 	sched_add(td, SRQ_BORING);
 
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE -) ** sched_wakeup() ** EXIT: %s\n", sched_tdname(td));
-	}
-    /////////////////
-
 }
 
 /*
@@ -2192,10 +2091,6 @@ sched_wakeup(struct thread *td)
 void
 sched_fork(struct thread *td, struct thread *child)
 {
-
-	/////////////////
-    //log(LOG_INFO, "\n\tSCHED_ULE 1) ** sched_fork() ** has been called\n");
-    /////////////////
 
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
 	sched_pctcpu_update(td_get_sched(td), 1);
@@ -2209,10 +2104,6 @@ sched_fork(struct thread *td, struct thread *child)
 	sched_interact_update(td);
 	sched_priority(td);
 
-	/////////////////
-    //log(LOG_INFO, "\tSCHED_ULE 1) ** sched_fork() ** EXIT\n");
-    /////////////////
-
 }
 
 /*
@@ -2222,20 +2113,12 @@ void
 sched_fork_thread(struct thread *td, struct thread *child)
 {
 
-	/////////////////
-    //log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** has been called\n");
-    /////////////////
-
 	struct td_sched *ts;
 	struct td_sched *ts2;
 	struct tdq *tdq;
 
 	tdq = TDQ_SELF();
 	THREAD_LOCK_ASSERT(td, MA_OWNED);
-
-	/////////////////
-    //log(LOG_INFO, "\tSCHED_ULE 2) // sched_fork_thread() // Initialize child\n");
-    /////////////////
 
 	/*
 	 * Initialize child.
@@ -2268,10 +2151,6 @@ sched_fork_thread(struct thread *td, struct thread *child)
 #ifdef KTR
 	bzero(ts2->ts_name, sizeof(ts2->ts_name));
 #endif
-
-	/////////////////
-    //log(LOG_INFO, "\n\tSCHED_ULE 2) ** sched_fork_thread() ** EXIT\n");
-    /////////////////
 
 }
 
@@ -2528,12 +2407,6 @@ void
 tdq_add(struct tdq *tdq, struct thread *td, int flags)
 {
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\n\tSCHED_ULE 5) ** tdq_add() ** has been called\n");
-	}
-    /////////////////
-
 	TDQ_LOCK_ASSERT(tdq, MA_OWNED);
 	KASSERT((td->td_inhibitors == 0),
 	    ("sched_add: trying to run inhibited thread"));
@@ -2547,10 +2420,6 @@ tdq_add(struct tdq *tdq, struct thread *td, int flags)
 	tdq_runq_add(tdq, td, flags);
 	tdq_load_add(tdq, td);
 
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-		log(LOG_INFO, "\tSCHED_ULE 5) ** tdq_add() ** EXIT\n");
-	}
 }
 
 /*
@@ -2560,17 +2429,6 @@ tdq_add(struct tdq *tdq, struct thread *td, int flags)
 void
 sched_add(struct thread *td, int flags)
 {
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-		log(LOG_INFO, "\n\tSCHED_ULE 3) ** sched_add() ** has been called\n");
-		
-		log(LOG_INFO, "\tSCHED_ULE 3) // sched_add() // -- sched_tdname of CURRENT THREAD (currthread) - thread name: %s\n", sched_tdname(curthread));
-		log(LOG_INFO, "\tSCHED_ULE 3) // sched_add() // -- sched_tdname of the TARGET THREAD *- thread name: %s\n", sched_tdname(td));
-    /////////////////
-	}
-
-
 	struct tdq *tdq;
 #ifdef SMP
 	int cpu;
@@ -2610,24 +2468,11 @@ sched_add(struct thread *td, int flags)
 	 * to the scheduler's lock.
 	 */
 
-		/////////////////
-		if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-			log(LOG_INFO, "\tSCHED_ULE 3) // sched_add() // thread is moved to the run-queue\n");
-		}
-		/////////////////
-
 	thread_lock_set(td, TDQ_LOCKPTR(tdq));
 	tdq_add(tdq, td, flags);
 #endif
 	if (!(flags & SRQ_YIELDING))
 		sched_setpreempt(td);
-
-
-	/////////////////
-	if(strncmp("macrosCommentCLANG", sched_tdname(td),sizeof("macrosCommentCLANG"))==0){
-    	log(LOG_INFO, "\tSCHED_ULE 3) ** sched_add() ** EXIT\n");
-	}
-    /////////////////
 
 }
 
